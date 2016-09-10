@@ -2,9 +2,12 @@ PROG   -> MAIN {CLASSE}
 MAIN   -> class id '{' public static void main '(' String '[' ']' id ')' '{' CMD '}' '}'
 CLASSE -> class id [extends id] '{' {VAR} {METODO} '}'
 VAR    -> TIPO id ;
-METODO -> public TIPO id '(' [PARAMS] ')' '{' {VAR} {CMD} return EXP ; '}'
-PROCED -> public void id '(' [PARAMS] ')' '{' {VAR} {CMD} '}'
+METODO -> public TIPO id '(' [PARAMS] ')' '{' {{VAR} {CMD}} return EXP ; '}'
+PROCED -> public void id '(' [PARAMS] ')' '{' {{VAR} {CMD}} '}'
 PARAMS -> TIPO id {, TIPO id}
+SWITCH -> switch '(' EXP ')' '{' CASES '}'
+CASES  -> {CASE} default: EXP [break] ;
+CASE   -> case EXP : EXP [break] ;
 TIPO   -> int '[' ']'
         | boolean
         | int
