@@ -1,0 +1,5 @@
+class Mannel {
+   int namorada = 1 ;
+   int habilidade = -1 ;
+   System.out.println ( "RodrigoSoldi" ) ;
+}
