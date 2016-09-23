@@ -7,57 +7,23 @@
 //
 
 #include <stdio.h>
-
-// ----------------------
-// PONTUATION
-
-#define PONT_PARENTESES 100
-#define STMT_X          200
-// ----------------------
-// LETERS
-
-#define a 'a'
-#define b 'b'
-#define c 'c'
-#define d 'd'
-#define e 'e'
-#define f 'f'
-#define g 'g'
-#define h 'h'
-#define i 'i'
-#define j 'j'
-#define k 'k'
-#define l 'l'
-#define m 'm'
-#define n 'n'
-#define o 'o'
-#define p 'p'
-#define q 'q'
-#define r 'r'
-
-/*
- 
- Matriz:
-            PONT_PARENTESES     STMT_X      NAO_SEI_QUE
-        1           4
-        2
-        3
-        4
-        5
-        6
-        7
- 
- */
+#include <stdlib.h>
+#include <string.h>
+#include "constants.c"
 
 // Functions
-int check(char, int); // function declaration
+int checkTransitionFunction(char, int);
+int readWord();
+void makeTransitionFunction();
+void checkWord();
+void createTransitionFunctions();
 
 // Global Variables
-int ninputs = 18; // number of input symbols
-char symbols[100] = {b, o, l, e, a, n}; // input symbols
+int ninputs = 26; // number of input symbols
+char symbols[100] = {A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z}; // input symbols
 
-int nfinals = 1; // number of final states
-int finalStates[100] = {7}; // final states
+int nfinals = 4; // number of final states
+int finalStates[100] = {7, 12, 29, 31}; // final states
 
 int dfa[1000][1000]; // matrix of transition functions
 char string[100]; // character flow
@@ -66,48 +32,27 @@ int s = 0; // current state
 int lexemes[100]; // The state where the lexema was recognized
 int currentLexema = 0; // The current index position of the lexemes array
 
-int main(void) {
+char word[1024]; // Current word on reading
+
+FILE *file;
+
+int main() {
     
-    int it; // iterator
+    createTransitionFunctions();
     
-    dfa[0][b] = 1;
-    dfa[1][o] = 2;
-    dfa[2][o] = 3;
-    dfa[3][l] = 4;
-    dfa[4][e] = 5;
-    dfa[5][a] = 6;
-    dfa[6][n] = 7;
+    file = fopen("/Users/KaiqueDamato/Documents/AutomatosProjetoDeLinguagemDeProgramacao7N/words.txt", "r");
     
-    do {
-        it=0;
-        printf("\n\nEnter Input String.. ");
-        scanf("%s",string);
+    while (readWord()) {
         
-        while(string[it] != '\0') {
-            if((s = check(string[it++], s)) < 0) {
-                break;
-            }
-        }
+        makeTransitionFunction();
+        checkWord();
         
-        for(it = 0; it < nfinals; it++) {
-            if(finalStates[it] == s) {
-                printf("\nvalid string");
-                lexemes[currentLexema++] = s;
-            } else {
-                printf("invalid string");
-            }
-        }
-        
-        getchar();
-        
-        printf("\nDo you want to continue.?  \n(y/n) ");
         s = 0;
-    } while(getchar() == 'y');
-    
-    getchar();
+    }
 }
 
-int check(char symbol, int currentState) {
+// Get the current state and the current carecter and return the new state
+int checkTransitionFunction(char symbol, int currentState) {
     int it;
     for(it = 0; it < ninputs; it++) {
         if(symbol == symbols[it]) {
@@ -115,4 +60,59 @@ int check(char symbol, int currentState) {
         }
     }
     return -1;
+}
+
+// Iterate over word and calls checkTransitionFunction
+void makeTransitionFunction() {
+    int it = 0;
+    
+    while(word[it] != '\0') {
+        if((s = checkTransitionFunction(word[it++], s)) < 0) {
+            break;
+        }
+    }
+}
+
+// Verify if the word is valid
+void checkWord() {
+    int it = 0;
+    
+    for(it = 0; it < nfinals; it++) {
+        if(finalStates[it] == s) {
+            printf("%s --> valid string\n", word);
+            lexemes[currentLexema++] = s;
+            return;
+        }
+    }
+    printf("%s --> invalid string\n", word);
+}
+
+// Read the next word in txt
+int readWord() {
+    if (fscanf(file, "%1023s", word) != -1) {
+        return 1;
+    }
+    return 0;
+}
+
+// Create the transition functions
+void createTransitionFunctions() {
+    dfa[0][B] = 1;
+    dfa[1][O] = 2;
+    dfa[2][O] = 3;
+    dfa[3][L] = 4;
+    dfa[4][E] = 5;
+    dfa[5][A] = 6;
+    dfa[6][N] = 7;
+    
+    dfa[0][C]  = 8;
+    dfa[8][L]  = 9;
+    dfa[9][A]  = 10;
+    dfa[10][S] = 11;
+    dfa[11][S] = 12;
+    
+    dfa[0][I] = 28;
+    dfa[28][F] = 29;
+    dfa[28][N] = 30;
+    dfa[30][T] = 31;
 }
