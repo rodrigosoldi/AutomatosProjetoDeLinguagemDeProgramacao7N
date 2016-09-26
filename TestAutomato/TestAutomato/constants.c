@@ -13,6 +13,7 @@
 
 #define PONT_PARENTESES 100
 #define STMT_X          200
+#define pt '.'
 // ----------------------
 // LETERS
 

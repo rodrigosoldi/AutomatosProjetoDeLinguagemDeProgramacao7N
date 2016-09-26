@@ -20,8 +20,8 @@ void checkWord();
 void createTransitionFunctions();
 
 // Global Variables
-int ninputs = 52; // number of input symbols
-char symbols[100] = {A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z}; // input symbols
+int ninputs = 53; // number of input symbols
+char symbols[100] = {A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, pt}; // input symbols
 
 int nfinals = 20; // number of final states
 int finalStates[100] = {7, 12, 16, 22, 27, 29, 31, 37, 41, 44, 47, 53, 59, 65, 71, 88, 92, 95, 99, 104}; // final states
@@ -114,12 +114,6 @@ void createTransitionFunctions() {
     dfa[10][s] = 11;
     dfa[11][s] = 12;
     
-    //transition functions for if or int
-    dfa[0][i] = 28;
-    dfa[28][f] = 29;
-    dfa[28][n] = 30;
-    dfa[30][t] = 31;
-    
     //transition functions for else
     dfa[0][e] = 13;
     dfa[13][l] = 14;
@@ -133,4 +127,117 @@ void createTransitionFunctions() {
     dfa[19][n] = 20;
     dfa[20][d] = 21;
     dfa[21][s] = 22;
+    
+    //transition functions for false
+    dfa[0][f] = 23;
+    dfa[23][a] = 24;
+    dfa[24][l] = 25;
+    dfa[25][s] = 26;
+    dfa[26][e] = 27;
+    
+    //transition functions for if or int
+    dfa[0][i] = 28;
+    dfa[28][f] = 29;
+    dfa[28][n] = 30;
+    dfa[30][t] = 31;
+    
+    //transition functions for length
+    dfa[0][l] = 32;
+    dfa[32][e] = 33;
+    dfa[33][n] = 34;
+    dfa[34][g] = 35;
+    dfa[35][t] = 36;
+    dfa[36][h] = 37;
+    
+    //transition functions for main
+    dfa[0][m] = 38;
+    dfa[38][a] = 39;
+    dfa[39][i] = 40;
+    dfa[40][n] = 41;
+    
+    //transition functions for new
+    dfa[0][n] = 42;
+    dfa[42][e] = 43;
+    dfa[43][w] = 44;
+    
+    //transition functions for null
+    dfa[42][u] = 45;
+    dfa[45][l] = 46;
+    dfa[46][l] = 47;
+    
+    //transition functions for public
+    dfa[0][p] = 48;
+    dfa[48][u] = 49;
+    dfa[49][b] = 50;
+    dfa[50][l] = 51;
+    dfa[51][i] = 52;
+    dfa[52][c] = 53;
+    
+    //transition functions for return
+    dfa[0][r] = 54;
+    dfa[54][e] = 55;
+    dfa[55][t] = 56;
+    dfa[56][u] = 57;
+    dfa[57][r] = 58;
+    dfa[58][n] = 59;
+    
+    //transition functions for static
+    dfa[0][s] = 60;
+    dfa[60][t] = 61;
+    dfa[61][a] = 62;
+    dfa[62][t] = 63;
+    dfa[63][i] = 64;
+    dfa[64][c] = 65;
+    
+    //transition functions for String
+    dfa[0][S] = 66;
+    dfa[66][t] = 67;
+    dfa[67][r] = 68;
+    dfa[68][i] = 69;
+    dfa[69][n] = 70;
+    dfa[70][g] = 71;
+    
+    //transition functions fot System.out.println
+    dfa[66][y] = 72;
+    dfa[72][s] = 73;
+    dfa[73][t] = 74;
+    dfa[74][e] = 75;
+    dfa[75][m] = 76;
+    dfa[76][pt] = 77;
+    dfa[77][o] = 78;
+    dfa[78][u] = 79;
+    dfa[79][t] = 80;
+    dfa[80][pt] = 81;
+    dfa[81][p] = 82;
+    dfa[82][r] = 83;
+    dfa[83][i] = 84;
+    dfa[84][n] = 85;
+    dfa[85][t] = 86;
+    dfa[86][l] = 87;
+    dfa[87][n] = 88;
+    
+    //transition functions for this
+    dfa[0][t] = 89;
+    dfa[89][h] = 90;
+    dfa[90][i] = 91;
+    dfa[91][s] = 92;
+    
+    //transition functions for true
+    dfa[89][r] = 93;
+    dfa[93][u] = 94;
+    dfa[94][e] = 95;
+    
+    //transition functions for void
+    dfa[0][v] = 96;
+    dfa[96][o] = 97;
+    dfa[97][i] = 98;
+    dfa[98][d] = 99;
+    
+    //transitions functions for while
+    dfa[0][w] = 100;
+    dfa[100][h] = 101;
+    dfa[101][i] = 102;
+    dfa[102][l] = 103;
+    dfa[103][e] = 104;
+    
 }
