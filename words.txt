@@ -1,3 +1,5 @@
+else
+extends
 class
 Mannel
 {
@@ -17,3 +19,4 @@ System.out.println
 )
 ;
 }
+boolean
