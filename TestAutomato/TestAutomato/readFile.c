@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 
 
 // Functions
@@ -20,6 +22,14 @@ static void readFile(char *filename) {
         printf("%s", "O arquivo nao pode ser lido.");
         exit(0);
     }
+    
+    char cwd[1024];
+    if (getcwd(cwd, sizeof(cwd)) != NULL)
+        strcat(cwd, "/words.txt");
+    else
+        perror("getcwd() error");
+    
+    remove(cwd);
     
     iterateFile(handler);
 }
@@ -118,7 +128,13 @@ static void writeWord(char *word) {
         return;
     }
     
-    FILE *file = fopen("/Users/RodrigoSoldi/Documents/Projetos/jflap/projetoLinguagemDeProgramacao/automatos/words.txt", "a");
+    char cwd[1024];
+    if (getcwd(cwd, sizeof(cwd)) != NULL)
+        strcat(cwd, "/words.txt");
+    else
+        perror("getcwd() error");
+    
+    FILE *file = fopen(cwd, "a");
     if (file == NULL) {
         printf("Error opening file!\n");
         exit(1);
