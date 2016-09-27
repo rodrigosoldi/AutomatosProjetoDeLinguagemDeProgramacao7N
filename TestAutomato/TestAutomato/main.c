@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "constants.c"
 #include "ReadFile.c"
 
@@ -18,6 +19,8 @@ int readWord();
 void makeTransitionFunction();
 void checkWord();
 void createTransitionFunctions();
+char *tokenForState(int);
+void generateTokens(int[],int);
 
 // Global Variables
 int ninputs = 53; // number of input symbols
@@ -40,7 +43,12 @@ FILE *file;
 int main() {
     createTransitionFunctions();
     
-    file = fopen("/Users/KaiqueDamato/Documents/AutomatosProjetoDeLinguagemDeProgramacao7N/words.txt", "r");
+    char buffer[200];
+    char *path = getcwd(buffer, sizeof(buffer));
+    
+    printf("-----> %s\n", path);
+    
+    file = fopen(strcat(path, "/Files/words.txt"), "r");
     
     while (readWord()) {
         
@@ -49,6 +57,7 @@ int main() {
         
         cs = 0;
     }
+    generateTokens(lexemes, currentLexema);
 }
 
 // Get the current state and the current carecter and return the new state
@@ -94,6 +103,105 @@ int readWord() {
     }
     return 0;
 }
+
+////////////////////////////////////////////////
+
+void generateTokens(int lexems[], int length) {
+    char *tokens[length];
+    char tokensString[10000];
+    tokensString[0] = '\0';
+    int it;
+    for (it = 0; it < length; it++) {
+        tokens[it] = tokenForState(lexems[it]);
+        printf("-> %s\n", tokens[it]);
+        printf("->>>> %s", tokensString);
+        strcat(tokensString, strcat(tokens[it], "\n"));
+        printf("::: %s :::", tokensString);
+    }
+    
+//    char buffer[200];
+//    char *path = getcwd(buffer, sizeof(buffer));
+//    
+//    FILE *file = fopen(strcat(path, "tokens"), "a");
+//    if (file == NULL) {
+//        printf("Error opening file!\n");
+//        exit(1);
+//    }
+//    printf("%s\n", tokensString);
+//    fprintf(file, "%s", tokensString);
+//    fclose(file);
+}
+
+char *tokenForState(int state) {
+    switch (state) {
+        case 7:
+            return "<boolean>";
+            break;
+        case 12:
+            return "<class>";
+            break;
+        case 16:
+            return "<else>";
+            break;
+        case 22:
+            return "<extends>";
+            break;
+        case 27:
+            return "<false>";
+            break;
+        case 29:
+            return "<if>";
+            break;
+        case 31:
+            return "<int>";
+            break;
+        case 37:
+            return "<length>";
+            break;
+        case 41:
+            return "<main>";
+            break;
+        case 44:
+            return "<new>";
+            break;
+        case 47:
+            return "<null>";
+            break;
+        case 53:
+            return "<public>";
+            break;
+        case 59:
+            return "<return>";
+            break;
+        case 65:
+            return "<static>";
+            break;
+        case 71:
+            return "<String>";
+            break;
+        case 88:
+            return "System.out.println";
+            break;
+        case 92:
+            return "<this>";
+            break;
+        case 95:
+            return "<true>";
+            break;
+        case 99:
+            return "<void>";
+            break;
+        case 104:
+            return "<while>";
+            break;
+            
+        default:
+            return "ERROR";
+            break;
+    }
+}
+
+////////////////////////////////////////////////
 
 // Create the transition functions
 void createTransitionFunctions() {
