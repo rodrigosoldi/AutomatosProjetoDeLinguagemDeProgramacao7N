@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "constants.c"
-#include "readFile.c"
+#include "ReadFile.c"
 
 // Functions
 int checkTransitionFunction(char, int);
@@ -38,7 +38,6 @@ char word[1024]; // Current word on reading
 FILE *file;
 
 int main() {
-    
     createTransitionFunctions();
     
     file = fopen("/Users/KaiqueDamato/Documents/AutomatosProjetoDeLinguagemDeProgramacao7N/words.txt", "r");
