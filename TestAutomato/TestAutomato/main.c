@@ -26,7 +26,7 @@ char symbols[100] = {A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T,
 int nfinals = 20; // number of final states
 int finalStates[100] = {7, 12, 16, 22, 27, 29, 31, 37, 41, 44, 47, 53, 59, 65, 71, 88, 92, 95, 99, 104}; // final states
 
-int dfa[1000][1000]; // matrix of transition functions
+int dfa[130][130]; // matrix of transition functions
 char string[100]; // character flow
 int cs = 0; // current state
 
@@ -40,7 +40,18 @@ FILE *file;
 int main() {
     createTransitionFunctions();
     
-    file = fopen("/Users/KaiqueDamato/Documents/AutomatosProjetoDeLinguagemDeProgramacao7N/words.txt", "r");
+    char cwd[1024];
+    char cwd2[1024];
+    
+    if (getcwd(cwd, sizeof(cwd)) != NULL && getcwd(cwd2, sizeof(cwd2)) != NULL) {
+        strcat(cwd, "/yourfile.txt");
+        strcat(cwd2, "/words.txt");
+    } else {
+        perror("getcwd() error");
+    }
+    
+    readFile(cwd);
+    file = fopen(cwd2, "r");
     
     while (readWord()) {
         
