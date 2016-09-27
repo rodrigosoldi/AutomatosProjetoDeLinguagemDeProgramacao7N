@@ -3,6 +3,7 @@
 */
 class Mannel {
    int namorada = 1 ;
+   double liliane = 25 ;
 	/*Comentario qualquer*/
    int habilidade = 1 ;
 	// Ignorar isso aqui

@@ -23,11 +23,11 @@ char *tokenForState(int);
 void generateTokens(int[],int);
 
 // Global Variables
-int ninputs = 53; // number of input symbols
-char symbols[100] = {A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, pt}; // input symbols
+int ninputs = 81; // number of input symbols
+char symbols[100] = {A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, opPar, clPar, opBrac, clBrac, opChav, clChav, vir, pt, ptVir, eCom, larger, smaller, excQuote, equal, minus, plus, times, slash, backslash, zero, one, two, three, four, five, six, seven, eight, nine}; // input symbols
 
-int nfinals = 20; // number of final states
-int finalStates[100] = {7, 12, 16, 22, 27, 29, 31, 37, 41, 44, 47, 53, 59, 65, 71, 88, 92, 95, 99, 104}; // final states
+int nfinals = 45; // number of final states
+int finalStates[100] = {7, 12, 16, 22, 27, 29, 31, 37, 41, 44, 47, 53, 59, 65, 71, 88, 92, 95, 99, 104, 106, 107, 108, 109, 110, 111, 113, 114, 115, 116, 117, 118, 119, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 200}; // final states
 
 int dfa[130][130]; // matrix of transition functions
 char string[100]; // character flow
@@ -121,7 +121,7 @@ void generateTokens(int lexems[], int length) {
         tokens[it] = tokenForState(lexems[it]);
         printf("-> %s\n", tokens[it]);
         printf("->>>> %s", tokensString);
-        strcat(tokensString, strcat(tokens[it], "\n"));
+//        strcat(tokensString, strcat(tokens[it], "\n"));
         printf("::: %s :::", tokensString);
     }
     
@@ -353,4 +353,49 @@ void createTransitionFunctions() {
     dfa[102][l] = 103;
     dfa[103][e] = 104;
     
+    //transition functions for pontuation
+    dfa[0][backslash] = 105;
+    dfa[105][n] = 106;
+    dfa[105][t] = 107;
+    dfa[105][r] = 108;
+    dfa[105][f] = 109;
+    dfa[0][plus] = 114;
+    dfa[0][minus] = 115;
+    dfa[0][equal] = 116;
+    dfa[116][equal] = 118;
+    dfa[0][excQuote] = 119;
+    dfa[119][equal] = 118;
+    dfa[0][smaller] = 117;
+    dfa[0][eCom] = 120;
+    dfa[120][eCom] = 121;
+    dfa[0][opPar] = 122;
+    dfa[0][clPar] = 123;
+    dfa[0][opBrac] = 124;
+    dfa[0][clBrac] = 125;
+    dfa[0][opChav] = 126;
+    dfa[0][clChav] = 127;
+    dfa[0][ptVir] = 128;
+    dfa[0][vir] = 129;
+    dfa[0][pt] = 130;
+    dfa[0][larger] = 200;
+    dfa[0][zero] = 131;
+    dfa[131][zero] = 131;
+    dfa[0][one] = 131;
+    dfa[131][one] = 131;
+    dfa[0][two] = 131;
+    dfa[131][two] = 131;
+    dfa[0][three] = 131;
+    dfa[131][three] = 131;
+    dfa[0][four] = 131;
+    dfa[131][four] = 131;
+    dfa[0][five] = 131;
+    dfa[131][five] = 131;
+    dfa[0][six] = 131;
+    dfa[131][six] = 131;
+    dfa[0][seven] = 131;
+    dfa[131][seven] = 131;
+    dfa[0][eight] = 131;
+    dfa[131][eight] = 131;
+    dfa[0][nine] = 131;
+    dfa[131][nine] = 131;
 }

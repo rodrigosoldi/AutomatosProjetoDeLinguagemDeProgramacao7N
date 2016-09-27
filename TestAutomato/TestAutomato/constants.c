@@ -11,9 +11,36 @@
 // ----------------------
 // PONTUATION
 
-#define PONT_PARENTESES 100
-#define STMT_X          200
-#define pt '.'
+#define opPar     '('
+#define clPar     ')'
+#define opBrac    '['
+#define clBrac    ']'
+#define opChav    '{'
+#define clChav    '}'
+#define vir       ','
+#define pt        '.'
+#define ptVir     ';'
+#define eCom      '&'
+#define larger    '>'
+#define smaller   '<'
+#define excQuote  '!'
+#define equal     '='
+#define minus     '-'
+#define plus      '+'
+#define times     '*'
+#define slash     '/'
+#define backslash '\\'
+#define zero      '0'
+#define one       '1'
+#define two       '2'
+#define three     '3'
+#define four      '4'
+#define five      '5'
+#define six       '6'
+#define seven     '7'
+#define eight     '8'
+#define nine      '9'
+
 // ----------------------
 // LETERS
 

@@ -6,6 +6,11 @@ namorada
 =
 1
 ;
+double
+liliane
+=
+25
+;
 int
 habilidade
 =
