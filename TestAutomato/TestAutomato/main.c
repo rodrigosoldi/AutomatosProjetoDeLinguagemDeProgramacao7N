@@ -115,28 +115,29 @@ int readWord() {
 
 void generateTokens(int lexems[], int length) {
     char *tokens[length];
-    char tokensString[10000];
-    tokensString[0] = '\0';
+    char *tokensString = malloc(1000);
+//    tokensString[0] = '\;
     int it;
     for (it = 0; it < length; it++) {
         tokens[it] = tokenForState(lexems[it]);
         printf("-> %s\n", tokens[it]);
-        printf("->>>> %s", tokensString);
-//        strcat(tokensString, strcat(tokens[it], "\n"));
-        printf("::: %s :::", tokensString);
+        strcat(tokensString, tokens[it]);
+        strcat(tokensString, "\n");
+        printf("->>>> %s\n", tokensString);
     }
+    char buffer[200];
+    char *path = getcwd(buffer, sizeof(buffer));
+    FILE *file = fopen(strcat(path, "/tokens"), "a");
+    if (file == NULL) {
+        printf("Error opening file!\n");
+        exit(1);
+    }
+    printf("**--** %s **--**\n", tokensString);
+    fprintf(file, "%s", tokensString);
+    fclose(file);
+    printf("::: %s :::", tokensString);
     
-//    char buffer[200];
-//    char *path = getcwd(buffer, sizeof(buffer));
-//    
-//    FILE *file = fopen(strcat(path, "tokens"), "a");
-//    if (file == NULL) {
-//        printf("Error opening file!\n");
-//        exit(1);
-//    }
-//    printf("%s\n", tokensString);
-//    fprintf(file, "%s", tokensString);
-//    fclose(file);
+    
 }
 
 char *tokenForState(int state) {
@@ -284,6 +285,24 @@ void createTransitionFunctions() {
             dfa[myState][myIn] = 132;
         }
         dfa[myState]['_'] = 132;
+    }
+    
+    // letras maiúsculas
+    char myChar;
+    for (myChar = 'A'; myChar <= 'Z'; myChar++) {
+        dfa[0][myChar] = 133;
+    }
+    for (myChar = 'a'; myChar <= 'z'; myChar++) {
+        dfa[0][myChar] = 133;
+    }
+    int myCurrentState;
+    for (myCurrentState = 131; myCurrentState <= 135; myCurrentState++) {
+        for (myChar = 'A'; myChar <= 'Z'; myChar++) {
+            dfa[myCurrentState][myChar] = 133;
+        }
+        for (myChar = 'a'; myChar <= 'z'; myChar++) {
+            dfa[myCurrentState][myChar] = 133;
+        }
     }
     
     //transition functions for boolean
@@ -474,22 +493,6 @@ void createTransitionFunctions() {
     dfa[0][nine] = 131;
     dfa[131][nine] = 131;
     /***/
-    // letras maiúsculas
-    char myChar;
-    for (myChar = 'A'; myChar <= 'Z'; myChar++) {
-        dfa[0][myChar] = 133;
-    }
-    for (myChar = 'a'; myChar <= 'z'; myChar++) {
-        dfa[0][myChar] = 133;
-    }
-    int myCurrentState;
-    for (myCurrentState = 131; myCurrentState <= 135; myCurrentState++) {
-        for (myChar = 'A'; myChar <= 'Z'; myChar++) {
-            dfa[myCurrentState][myChar] = 133;
-        }
-        for (myChar = 'a'; myChar <= 'z'; myChar++) {
-            dfa[myCurrentState][myChar] = 133;
-        }
-    }
+   
     
 }
