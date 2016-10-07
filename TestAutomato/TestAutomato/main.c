@@ -26,8 +26,8 @@ void generateTokens(int[],int);
 int ninputs = 81; // number of input symbols
 char symbols[100] = {A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, opPar, clPar, opBrac, clBrac, opChav, clChav, vir, pt, ptVir, eCom, larger, smaller, excQuote, equal, minus, plus, times, slash, backslash, zero, one, two, three, four, five, six, seven, eight, nine}; // input symbols
 
-int nfinals = 45; // number of final states
-int finalStates[100] = {7, 12, 16, 22, 27, 29, 31, 37, 41, 44, 47, 53, 59, 65, 71, 88, 92, 95, 99, 104, 106, 107, 108, 109, 110, 111, 113, 114, 115, 116, 117, 118, 119, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 200}; // final states
+int nfinals = 49; // number of final states
+int finalStates[100] = {7, 12, 16, 22, 27, 29, 31, 37, 41, 44, 47, 53, 59, 65, 71, 88, 92, 95, 99, 104, 106, 107, 108, 109, 110, 111, 113, 114, 115, 116, 117, 118, 119, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 200}; // final states
 
 int dfa[130][130]; // matrix of transition functions
 char string[100]; // character flow
@@ -47,7 +47,7 @@ int main() {
     char cwd2[1024];
     
     if (getcwd(cwd, sizeof(cwd)) != NULL && getcwd(cwd2, sizeof(cwd2)) != NULL) {
-        strcat(cwd, "/yourfile.txt");
+        strcat(cwd, "/Files/yourfile.txt");
         strcat(cwd2, "/words.txt");
     } else {
         perror("getcwd() error");
@@ -100,6 +100,7 @@ void checkWord() {
         }
     }
     printf("%s --> invalid string\n", word);
+    printf("unaccepted state: %d\n", cs);
 }
 
 // Read the next word in txt
@@ -186,7 +187,7 @@ char *tokenForState(int state) {
             return "<String>";
             break;
         case 88:
-            return "System.out.println";
+            return "<System.out.println>";
             break;
         case 92:
             return "<this>";
@@ -200,6 +201,63 @@ char *tokenForState(int state) {
         case 104:
             return "<while>";
             break;
+        case 114:
+            return "<OP,MA>";
+            break;
+        case 115:
+            return "<OP,ME>";
+            break;
+        case 116:
+            return "<OP,AT>";
+            break;
+        case 118:
+            return "<OP,CP>";
+            break;
+        case 117:
+            return "<OP,MN";
+            break;
+        case 121:
+            return "<OP,AN>";
+            break;
+        case 122:
+            return "<PT,PA>";
+            break;
+        case 123:
+            return "<PT,PF>";
+            break;
+        case 124:
+            return "<PT,CA>";
+            break;
+        case 125:
+            return "<PT,CF>";
+            break;
+        case 126:
+            return "<PT,XA>";
+            break;
+        case 127:
+            return "<PT,XF>";
+            break;
+        case 128:
+            return "<PT,PV>";
+            break;
+        case 129:
+            return "<PT,VR>";
+            break;
+        case 130:
+            return "<PT,PT>";
+            break;
+        case 200:
+            return "<OP,MR>";
+            break;
+        case 131:
+            return "<int>";
+            break;
+        case 132:
+        case 133:
+        case 134:
+        case 135:
+            return "<id,X>";
+            break;
             
         default:
             return "ERROR";
@@ -211,6 +269,23 @@ char *tokenForState(int state) {
 
 // Create the transition functions
 void createTransitionFunctions() {
+    
+    // path from reserved words to variables
+    int myState;
+    char myIn;
+    for (myState = 1; myState <= 104; myState++) {
+        for (myIn = 'a'; myIn <= 'z'; myIn++) {
+            dfa[myState][myIn] = 132;
+        }
+        for (myIn = 'A'; myIn <= 'Z'; myIn++) {
+            dfa[myState][myIn] = 132;
+        }
+        for (myIn = '0'; myIn <= '9'; myIn++) {
+            dfa[myState][myIn] = 132;
+        }
+        dfa[myState]['_'] = 132;
+    }
+    
     //transition functions for boolean
     dfa[0][b] = 1;
     dfa[1][o] = 2;
@@ -398,4 +473,23 @@ void createTransitionFunctions() {
     dfa[131][eight] = 131;
     dfa[0][nine] = 131;
     dfa[131][nine] = 131;
+    /***/
+    // letras maiúsculas
+    char myChar;
+    for (myChar = 'A'; myChar <= 'Z'; myChar++) {
+        dfa[0][myChar] = 133;
+    }
+    for (myChar = 'a'; myChar <= 'z'; myChar++) {
+        dfa[0][myChar] = 133;
+    }
+    int myCurrentState;
+    for (myCurrentState = 131; myCurrentState <= 135; myCurrentState++) {
+        for (myChar = 'A'; myChar <= 'Z'; myChar++) {
+            dfa[myCurrentState][myChar] = 133;
+        }
+        for (myChar = 'a'; myChar <= 'z'; myChar++) {
+            dfa[myCurrentState][myChar] = 133;
+        }
+    }
+    
 }
