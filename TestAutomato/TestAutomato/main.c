@@ -271,6 +271,8 @@ char *tokenForState(int state, char *id) {
             break;
             
         default:
+            printf("ERRO NA LEITURA");
+            exit(1);
             return "ERROR";
             break;
     }
