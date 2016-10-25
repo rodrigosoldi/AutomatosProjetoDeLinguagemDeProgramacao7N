@@ -19,7 +19,7 @@ int readWord();
 void makeTransitionFunction();
 void checkWord();
 void createTransitionFunctions();
-char *tokenForState(int);
+char *tokenForState(int, char *);
 void generateTokens(int[],int);
 
 // Global Variables
@@ -33,8 +33,12 @@ int dfa[130][130]; // matrix of transition functions
 char string[100]; // character flow
 int cs = 0; // current state
 
+char **words;
+
 int lexemes[100]; // The state where the lexema was recognized
 int currentLexema = 0; // The current index position of the lexemes array
+
+int indexWords = 0;
 
 char word[1024]; // Current word on reading
 
@@ -42,6 +46,8 @@ FILE *file;
 
 int main() {
     createTransitionFunctions();
+    
+    words = malloc(4096 * sizeof(char*));
     
     char cwd[1024];
     char cwd2[1024];
@@ -60,6 +66,9 @@ int main() {
         
         makeTransitionFunction();
         checkWord();
+        
+        words[indexWords] = malloc(1024);
+        words[indexWords++] = word;
         
         cs = 0;
     }
@@ -119,7 +128,8 @@ void generateTokens(int lexems[], int length) {
 //    tokensString[0] = '\;
     int it;
     for (it = 0; it < length; it++) {
-        tokens[it] = tokenForState(lexems[it]);
+        char *cWord = words[it];
+        tokens[it] = tokenForState(lexems[it], cWord);
         printf("-> %s\n", tokens[it]);
         strcat(tokensString, tokens[it]);
         strcat(tokensString, "\n");
@@ -127,7 +137,7 @@ void generateTokens(int lexems[], int length) {
     }
     char buffer[200];
     char *path = getcwd(buffer, sizeof(buffer));
-    FILE *file = fopen(strcat(path, "/tokens"), "a");
+    FILE *file = fopen(strcat(path, "/tokens.txt"), "a");
     if (file == NULL) {
         printf("Error opening file!\n");
         exit(1);
@@ -140,7 +150,7 @@ void generateTokens(int lexems[], int length) {
     
 }
 
-char *tokenForState(int state) {
+char *tokenForState(int state, char *id) {
     switch (state) {
         case 7:
             return "<boolean>";
@@ -215,7 +225,7 @@ char *tokenForState(int state) {
             return "<OP,CP>";
             break;
         case 117:
-            return "<OP,MN";
+            return "<OP,MN>";
             break;
         case 121:
             return "<OP,AN>";
@@ -245,13 +255,13 @@ char *tokenForState(int state) {
             return "<PT,VR>";
             break;
         case 130:
-            return "<PT,PT>";
+            return "<PT,PTF>";
             break;
         case 200:
             return "<OP,MR>";
             break;
         case 131:
-            return "<int>";
+            return "<number>";
             break;
         case 132:
         case 133:
@@ -493,6 +503,6 @@ void createTransitionFunctions() {
     dfa[0][nine] = 131;
     dfa[131][nine] = 131;
     /***/
-   
+   dfa[0][times] = 111;
     
 }
