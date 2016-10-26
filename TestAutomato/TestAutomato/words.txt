@@ -1,4 +1,4 @@
-earclass
+class
 Factorial
 {
 public

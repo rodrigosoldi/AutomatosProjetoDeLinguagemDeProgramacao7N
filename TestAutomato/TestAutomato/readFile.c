@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
+#include "ListNode.c"
 
 // Functions
 static void validatedWord(char *word, char *line);
@@ -11,6 +11,8 @@ static void iterateFile(FILE *file);
 static void readFile(char *filename);
 
 static int ignoringLine = 0;
+
+static List *LIST;
 
 /*
     Método responsável por fazer o carregamento do arquivo a ser lido
@@ -22,6 +24,8 @@ static void readFile(char *filename) {
         printf("%s", "O arquivo nao pode ser lido.");
         exit(0);
     }
+    
+    LIST = createList();
     
     char cwd[1024];
     if (getcwd(cwd, sizeof(cwd)) != NULL)
@@ -39,7 +43,7 @@ static void readFile(char *filename) {
     enviando linha por linha para avialiação
  */
 static void iterateFile(FILE *file) {
-    char word[1024];
+    char *word = (char *)malloc(1024 * sizeof(char));
     
     char * line = NULL;
     size_t len = 0;
@@ -133,6 +137,12 @@ static void writeWord(char *word) {
         strcat(cwd, "/words.txt");
     else
         perror("getcwd() error");
+    
+    char *copiedWord = (char *)malloc(1024 * sizeof(char));
+    strcpy(copiedWord, word);
+    
+    addListNode(LIST, createNode(copiedWord));
+    //printList(LIST);
     
     FILE *file = fopen(cwd, "a");
     if (file == NULL) {

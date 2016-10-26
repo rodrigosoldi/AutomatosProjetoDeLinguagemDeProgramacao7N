@@ -15,40 +15,30 @@
 
 // Functions
 int checkTransitionFunction(char, int);
-int readWord();
-void makeTransitionFunction();
-void checkWord();
+int makeTransitionFunction(char *lexeme);
 void createTransitionFunctions();
 char *tokenForState(int, char *);
-void generateTokens(int[],int);
+void generateTokens();
+char * checkExistVariable(char *var);
+char * createNewVariable(char *var);
 
 // Global Variables
-int ninputs = 81; // number of input symbols
-char symbols[100] = {A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, opPar, clPar, opBrac, clBrac, opChav, clChav, vir, pt, ptVir, eCom, larger, smaller, excQuote, equal, minus, plus, times, slash, backslash, zero, one, two, three, four, five, six, seven, eight, nine}; // input symbols
+int ninputs = 82; // number of input symbols
+char symbols[82] = {A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, opPar, clPar, opBrac, clBrac, opChav, clChav, vir, pt, ptVir, eCom, larger, smaller, excQuote, equal, minus, plus, times, slash, backslash, zero, one, two, three, four, five, six, seven, eight, nine, underscore}; // input symbols
 
 int nfinals = 49; // number of final states
-int finalStates[100] = {7, 12, 16, 22, 27, 29, 31, 37, 41, 44, 47, 53, 59, 65, 71, 88, 92, 95, 99, 104, 106, 107, 108, 109, 110, 111, 113, 114, 115, 116, 117, 118, 119, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 200}; // final states
+int finalStates[49] = {7, 12, 16, 22, 27, 29, 31, 37, 41, 44, 47, 53, 59, 65, 71, 88, 92, 95, 99, 104, 106, 107, 108, 109, 110, 111, 113, 114, 115, 116, 117, 118, 119, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 200}; // final states
 
-int dfa[130][130]; // matrix of transition functions
-char string[100]; // character flow
-int cs = 0; // current state
+int dfa[136][136]; // matrix of transition functions
 
-char **words;
-
-int lexemes[100]; // The state where the lexema was recognized
-int currentLexema = 0; // The current index position of the lexemes array
-
-int indexWords = 0;
-
-char word[1024]; // Current word on reading
+int sizeVariables = 0;
+char *variables[100];
 
 FILE *file;
 
 int main() {
     createTransitionFunctions();
-    
-    words = malloc(4096 * sizeof(char*));
-    
+
     char cwd[1024];
     char cwd2[1024];
     
@@ -62,17 +52,16 @@ int main() {
     readFile(cwd);
     file = fopen(cwd2, "r");
     
-    while (readWord()) {
+    ListNode *aux = LIST->head;
+    while (aux->next != NULL) {
+        int finalState = makeTransitionFunction(aux->lexeme);
+        aux->class = tokenForState(finalState, aux->lexeme);
         
-        makeTransitionFunction();
-        checkWord();
-        
-        words[indexWords] = malloc(1024);
-        words[indexWords++] = word;
-        
-        cs = 0;
+        aux = aux->next;
     }
-    generateTokens(lexemes, currentLexema);
+    
+    printList(LIST);
+    generateTokens();
 }
 
 // Get the current state and the current carecter and return the new state
@@ -87,54 +76,34 @@ int checkTransitionFunction(char symbol, int currentState) {
 }
 
 // Iterate over word and calls checkTransitionFunction
-void makeTransitionFunction() {
+int makeTransitionFunction(char * lexeme) {
     int it = 0;
-    
-    while(word[it] != '\0') {
-        if((cs = checkTransitionFunction(word[it++], cs)) < 0) {
+
+    int finalState = 0;
+    while(lexeme[it] != '\0') {
+        if((finalState = checkTransitionFunction(lexeme[it++], finalState)) < 0) {
             break;
         }
     }
-}
-
-// Verify if the word is valid
-void checkWord() {
-    int it = 0;
-    
-    for(it = 0; it < nfinals; it++) {
-        if(finalStates[it] == cs) {
-            printf("%s --> valid string\n", word);
-            lexemes[currentLexema++] = cs;
-            return;
-        }
-    }
-    printf("%s --> invalid string\n", word);
-    printf("unaccepted state: %d\n", cs);
-}
-
-// Read the next word in txt
-int readWord() {
-    if (fscanf(file, "%1023s", word) != -1) {
-        return 1;
-    }
-    return 0;
+    return finalState;
 }
 
 ////////////////////////////////////////////////
 
-void generateTokens(int lexems[], int length) {
-    char *tokens[length];
+void generateTokens() {
+   
     char *tokensString = malloc(1000);
-//    tokensString[0] = '\;
-    int it;
-    for (it = 0; it < length; it++) {
-        char *cWord = words[it];
-        tokens[it] = tokenForState(lexems[it], cWord);
-        printf("-> %s\n", tokens[it]);
-        strcat(tokensString, tokens[it]);
+    char *tokens[LIST->count];
+    
+    ListNode *aux = LIST->head;
+    while (aux->next != NULL) {
+        
+        strcat(tokensString, aux->class);
         strcat(tokensString, "\n");
-        printf("->>>> %s\n", tokensString);
+        
+        aux = aux->next;
     }
+    
     char buffer[200];
     char *path = getcwd(buffer, sizeof(buffer));
     FILE *file = fopen(strcat(path, "/tokens.txt"), "a");
@@ -142,12 +111,9 @@ void generateTokens(int lexems[], int length) {
         printf("Error opening file!\n");
         exit(1);
     }
-    printf("**--** %s **--**\n", tokensString);
+    
     fprintf(file, "%s", tokensString);
     fclose(file);
-    printf("::: %s :::", tokensString);
-    
-    
 }
 
 char *tokenForState(int state, char *id) {
@@ -212,6 +178,9 @@ char *tokenForState(int state, char *id) {
         case 104:
             return "<while>";
             break;
+        case 111:
+            return "<OP,MT>";
+            break;
         case 114:
             return "<OP,MA>";
             break;
@@ -260,22 +229,82 @@ char *tokenForState(int state, char *id) {
         case 200:
             return "<OP,MR>";
             break;
-        case 131:
-            return "<number>";
+        case 131:{
+            
+            char *complete = malloc(1000);
+            char *number = "<number,";
+            char *close = ">";
+            
+            strcat(complete, number);
+            strcat(complete, id);
+            strcat(complete, close);
+            
+            return complete;
             break;
+        }
         case 132:
         case 133:
         case 134:
-        case 135:
-            return "<id,X>";
-            break;
+        case 135: {
             
+            
+            char *complete = malloc(1000);
+            char *fWord = "<id,";
+            char *close = ">";
+            
+            char *number = checkExistVariable(id);
+            
+            strcat(complete, fWord);
+            strcat(complete, number);
+            strcat(complete, close);
+            
+            return complete;
+            
+            break;
+        }
         default:
-            printf("ERRO NA LEITURA");
+            printf("ERRO NA LEITURA\n\n");
             exit(1);
             return "ERROR";
             break;
     }
+}
+
+////////////////////////////////////////////////
+
+int strcmpa(char *s1, char *s2) {
+    int it;
+    for (it = 0; s1[it] == s2[it]; it++)
+        if (s1[it] == '\0')
+            return 0;
+    return s1[it] - s2[it];
+}
+
+char * checkExistVariable(char *var) {
+    
+    if (sizeVariables == 0) {
+        return  createNewVariable(var);
+    }
+    
+    int it;    
+    for (it = 0; it < sizeVariables; it++) {
+        
+        if (strcmpa(variables[it], var) == 0) {
+            char *number = malloc(sizeof(char));
+            sprintf(number, "%d", it);
+            return number;
+        }
+    }
+    
+    return createNewVariable(var);
+}
+
+char * createNewVariable(char *var) {
+    char *number = malloc(sizeof(char));
+    variables[sizeVariables] = var;
+    sprintf(number, "%d", sizeVariables);
+    sizeVariables++;
+    return number;
 }
 
 ////////////////////////////////////////////////
@@ -307,6 +336,7 @@ void createTransitionFunctions() {
     for (myChar = 'a'; myChar <= 'z'; myChar++) {
         dfa[0][myChar] = 133;
     }
+    
     int myCurrentState;
     for (myCurrentState = 131; myCurrentState <= 135; myCurrentState++) {
         for (myChar = 'A'; myChar <= 'Z'; myChar++) {
@@ -315,7 +345,9 @@ void createTransitionFunctions() {
         for (myChar = 'a'; myChar <= 'z'; myChar++) {
             dfa[myCurrentState][myChar] = 133;
         }
+        dfa[myCurrentState]['_'] = 132;
     }
+
     
     //transition functions for boolean
     dfa[0][b] = 1;
@@ -507,4 +539,5 @@ void createTransitionFunctions() {
     /***/
    dfa[0][times] = 111;
     
+
 }

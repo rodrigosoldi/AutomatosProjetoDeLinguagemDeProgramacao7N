@@ -40,6 +40,7 @@
 #define seven     '7'
 #define eight     '8'
 #define nine      '9'
+#define underscore '_'
 
 // ----------------------
 // LETERS
