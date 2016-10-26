@@ -1,2 +1,5 @@
 .DS_Store
+
+*.xcuserstate
+*.xcuserdata
 TestAutomato/TestAutomato.xcodeproj/project.xcworkspace/xcuserdata/KaiqueDamato.xcuserdatad/UserInterfaceState.xcuserstate
