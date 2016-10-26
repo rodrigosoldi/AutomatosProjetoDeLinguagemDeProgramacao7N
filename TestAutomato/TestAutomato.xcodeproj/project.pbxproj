@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		ACF4841D1D9A0E1500B949C3 /* ReadFile.c in Sources */ = {isa = PBXBuildFile; fileRef = ACF4841C1D9A0E1500B949C3 /* ReadFile.c */; };
+		ACF6B85B1DC0118300D15509 /* ListNode.c in Sources */ = {isa = PBXBuildFile; fileRef = ACF6B85A1DC0118300D15509 /* ListNode.c */; };
 		ECE2A5CB1D9078F000EB29AC /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = ECE2A5CA1D9078F000EB29AC /* main.c */; };
 		ECFBE6F51D959BCC006320B6 /* constants.c in Sources */ = {isa = PBXBuildFile; fileRef = ECFBE6F41D959BCC006320B6 /* constants.c */; };
 /* End PBXBuildFile section */
@@ -26,6 +27,7 @@
 
 /* Begin PBXFileReference section */
 		ACF4841C1D9A0E1500B949C3 /* ReadFile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ReadFile.c; sourceTree = "<group>"; };
+		ACF6B85A1DC0118300D15509 /* ListNode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ListNode.c; sourceTree = "<group>"; };
 		ECE2A5C71D9078F000EB29AC /* TestAutomato */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TestAutomato; sourceTree = BUILT_PRODUCTS_DIR; };
 		ECE2A5CA1D9078F000EB29AC /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		ECFBE6F41D959BCC006320B6 /* constants.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = constants.c; sourceTree = "<group>"; };
@@ -64,6 +66,7 @@
 				ACF4841C1D9A0E1500B949C3 /* ReadFile.c */,
 				ECE2A5CA1D9078F000EB29AC /* main.c */,
 				ECFBE6F41D959BCC006320B6 /* constants.c */,
+				ACF6B85A1DC0118300D15509 /* ListNode.c */,
 			);
 			path = TestAutomato;
 			sourceTree = "<group>";
@@ -126,6 +129,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ECE2A5CB1D9078F000EB29AC /* main.c in Sources */,
+				ACF6B85B1DC0118300D15509 /* ListNode.c in Sources */,
 				ACF4841D1D9A0E1500B949C3 /* ReadFile.c in Sources */,
 				ECFBE6F51D959BCC006320B6 /* constants.c in Sources */,
 			);
@@ -224,6 +228,9 @@
 		ECE2A5CF1D9078F000EB29AC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -231,6 +238,9 @@
 		ECE2A5D01D9078F000EB29AC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
