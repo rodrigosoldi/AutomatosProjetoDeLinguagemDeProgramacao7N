@@ -17,7 +17,7 @@
 int checkTransitionFunction(char, int);
 int makeTransitionFunction(char *lexeme);
 void createTransitionFunctions();
-char *tokenForState(int, char *);
+void tokenForState(int, ListNode *);
 void generateTokens();
 char * checkExistVariable(char *var);
 char * createNewVariable(char *var);
@@ -55,7 +55,7 @@ int main() {
     ListNode *aux = LIST->head;
     while (aux->next != NULL) {
         int finalState = makeTransitionFunction(aux->lexeme);
-        aux->class = tokenForState(finalState, aux->lexeme);
+        tokenForState(finalState, aux);
         
         aux = aux->next;
     }
@@ -98,7 +98,23 @@ void generateTokens() {
     ListNode *aux = LIST->head;
     while (aux->next != NULL) {
         
-        strcat(tokensString, aux->class);
+        char *minor = "<";
+        char *major = ">";
+        char *virg = ",";
+        
+        char *token = malloc(1024 * sizeof(char));
+        
+        strcat(token, minor);
+        strcat(token, aux->class);
+        
+        if (aux->parameter != NULL) {
+            strcat(token, virg);
+            strcat(token, aux->parameter);
+        }
+        
+        strcat(token, major);
+        
+        strcat(tokensString, token);
         strcat(tokensString, "\n");
         
         aux = aux->next;
@@ -116,130 +132,140 @@ void generateTokens() {
     fclose(file);
 }
 
-char *tokenForState(int state, char *id) {
+void tokenForState(int state, ListNode *listNode) {
     switch (state) {
         case 7:
-            return "<boolean>";
+            listNode->class = "boolean";
             break;
         case 12:
-            return "<class>";
+            listNode->class = "class";
             break;
         case 16:
-            return "<else>";
+            listNode->class = "else";
             break;
         case 22:
-            return "<extends>";
+            listNode->class = "extends";
             break;
         case 27:
-            return "<false>";
+            listNode->class = "false";
             break;
         case 29:
-            return "<if>";
+            listNode->class = "if";
             break;
         case 31:
-            return "<int>";
+            listNode->class = "int";
             break;
         case 37:
-            return "<length>";
+            listNode->class = "length";
             break;
         case 41:
-            return "<main>";
+            listNode->class = "main";
             break;
         case 44:
-            return "<new>";
+            listNode->class = "new";
             break;
         case 47:
-            return "<null>";
+            listNode->class = "null";
             break;
         case 53:
-            return "<public>";
+            listNode->class = "public";
             break;
         case 59:
-            return "<return>";
+            listNode->class = "return";
             break;
         case 65:
-            return "<static>";
+            listNode->class = "static";
             break;
         case 71:
-            return "<String>";
+            listNode->class = "String";
             break;
         case 88:
-            return "<System.out.println>";
+            listNode->class = "System.out.println";
             break;
         case 92:
-            return "<this>";
+            listNode->class = "this";
             break;
         case 95:
-            return "<true>";
+            listNode->class = "true";
             break;
         case 99:
-            return "<void>";
+            listNode->class = "void";
             break;
         case 104:
-            return "<while>";
+            listNode->class = "while";
             break;
         case 111:
-            return "<OP,MT>";
+            listNode->class = "OP";
+            listNode->parameter = "MT";
             break;
         case 114:
-            return "<OP,MA>";
+            listNode->class = "OP";
+            listNode->parameter = "MA";
             break;
         case 115:
-            return "<OP,ME>";
+            listNode->class = "OP";
+            listNode->parameter = "ME";
             break;
         case 116:
-            return "<OP,AT>";
+            listNode->class = "OP";
+            listNode->parameter = "AT";
             break;
         case 118:
-            return "<OP,CP>";
+            listNode->class = "OP";
+            listNode->parameter = "CP";
             break;
         case 117:
-            return "<OP,MN>";
+            listNode->class = "OP";
+            listNode->parameter = "MN";
             break;
         case 121:
-            return "<OP,AN>";
+            listNode->class = "OP";
+            listNode->parameter = "AN";
             break;
         case 122:
-            return "<PT,PA>";
+            listNode->class = "PT";
+            listNode->parameter = "PA";
             break;
         case 123:
-            return "<PT,PF>";
+            listNode->class = "PT";
+            listNode->parameter = "PF";
             break;
         case 124:
-            return "<PT,CA>";
+            listNode->class = "PT";
+            listNode->parameter = "CA";
             break;
         case 125:
-            return "<PT,CF>";
+            listNode->class = "PT";
+            listNode->parameter = "CF";
             break;
         case 126:
-            return "<PT,XA>";
+            listNode->class = "PT";
+            listNode->parameter = "XA";
             break;
         case 127:
-            return "<PT,XF>";
+            listNode->class = "PT";
+            listNode->parameter = "XF";
             break;
         case 128:
-            return "<PT,PV>";
+            listNode->class = "PT";
+            listNode->parameter = "PV";
             break;
         case 129:
-            return "<PT,VR>";
+            listNode->class = "PT";
+            listNode->parameter = "VR";
             break;
         case 130:
-            return "<PT,PTF>";
+            listNode->class = "PT";
+            listNode->parameter = "PTF";
             break;
         case 200:
-            return "<OP,MR>";
+            listNode->class = "OP";
+            listNode->parameter = "MR";
             break;
         case 131:{
+            listNode->class = "number";
+            listNode->parameter = listNode->lexeme;
             
-            char *complete = malloc(1000);
-            char *number = "<number,";
-            char *close = ">";
-            
-            strcat(complete, number);
-            strcat(complete, id);
-            strcat(complete, close);
-            
-            return complete;
             break;
         }
         case 132:
@@ -247,25 +273,15 @@ char *tokenForState(int state, char *id) {
         case 134:
         case 135: {
             
-            
-            char *complete = malloc(1000);
-            char *fWord = "<id,";
-            char *close = ">";
-            
-            char *number = checkExistVariable(id);
-            
-            strcat(complete, fWord);
-            strcat(complete, number);
-            strcat(complete, close);
-            
-            return complete;
+            char *number = checkExistVariable(listNode->lexeme);
+            listNode->class = "ID";
+            listNode->parameter = number;
             
             break;
         }
         default:
             printf("ERRO NA LEITURA\n\n");
             exit(1);
-            return "ERROR";
             break;
     }
 }
