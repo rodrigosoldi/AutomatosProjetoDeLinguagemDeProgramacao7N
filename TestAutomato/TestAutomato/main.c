@@ -39,10 +39,7 @@ FILE *file;
 
 int main() {
     
-#warning TESTE    
     createProductions();
-    exit(1);
-    
     createTransitionFunctions();
     
     char cwd[1024];

@@ -1,0 +1,76 @@
+-PROG -> MAIN
+-PROG -> MAIN CLASSE_X
+-CLASSE_X -> CLASSE CLASSE_X
+-CLASSE_X -> CLASSE
+
+-MAIN -> class id ‘{‘ public static void main ‘(‘ String ‘[‘ ‘]’ id ‘)’ ‘{‘ CMD ‘}’ ‘}’
+
+-CLASSE -> class id ‘{‘ ‘}’
+-CLASSE -> class id ‘{‘ METODO_X ‘}’
+-METODO_X -> METODO METODO_X
+-METODO_X -> METODO
+-CLASSE -> class id ‘{‘ VAR_X ‘}’
+-VAR_X -> VAR VAR_X
+-VAR_X -> VAR
+-CLASSE -> class id ‘{‘ VAR_METODO_X ‘}’
+-VAR_METODO_X -> VAR_X METODO_X
+-VAR_METODO_X -> METODO_X VAR_X
+
+-VAR -> TIPO id ;
+
+-METODO -> public TIPO id ‘(‘ ‘)’ ‘{‘ return EXP ; ‘}’
+-METODO -> public TIPO id ‘(‘ ‘)’ ‘{‘ VAR_CMD_X return EXP ‘}’
+-VAR_CMD_X -> VAR_X
+-CMD_X -> CMD CMD_X
+-CMD_X -> CMD
+-VAR_CMD_X -> CMD_X
+-VAR_CMD_X -> VAR_X CMD_X
+-VAR_CMD_X -> CMD_X VAR_X
+-METODO -> public TIPO id ‘(‘ PARAMS ‘)’ ‘{‘ return EXP ; ‘}’
+-METODO -> public TIPO id ‘(‘ PARAMS ‘)’ ‘{‘ VAR_CMD_X return EXP ; ‘}’
+-PARAMS -> TIPO id
+-PARAMS -> TIPO id TIPOS_X
+-TIPOS_X -> , TIPO id TIPOS_X
+-TIPOS_X -> , TIPO id
+-TIPO -> int ‘[‘ ‘]’
+-TIPO -> boolean
+-TIPO -> int
+-TIPO -> id
+
+-CMD -> ‘{‘ ‘}’
+-CMD -> ‘{‘CMD_X ‘}’
+-CMD -> id = EXP ;
+-CMD -> if ‘(‘ EXP ‘)’ CMD
+-CMD -> if ‘(‘ EXP ‘)’ CMD else CMD
+-CMD -> System.out.println ‘(‘ EXP ‘)’ ;
+
+-EXP -> EXP && REXP
+-EXP -> REXP
+-REXP -> REXP < AEXP
+-REXP -> REXP == AEXP
+-REXP -> REXP != AEXP
+-REXP -> AEXP
+-AEXP -> AEXP + MEXP
+-AEXP -> AEXP - MEXP
+-AEXP -> MEXP
+-MEXP -> MEXP * SEXP
+-MEXP -> SEXP
+-SEXP -> ! SEXP
+-SEXP -> - SEXP
+-SEXP -> true
+-SEXP -> false
+-SEXP -> num
+-SEXP -> null
+-SEXP -> PEXP . length
+-SEXP -> PEXP
+-PEXP -> id
+-PEXP -> this
+-PEXP -> new id ‘(‘ ‘)’
+-PEXP -> ‘(‘ EXP ‘)’
+-PEXP -> PEXP . id
+-PEXP -> PEXP . id ‘(‘ ‘)’
+-PEXP -> PEXP . id ‘(‘ EXPS ‘)’
+-EXPS -> EXP
+-EXPS -> EXP EXP_X
+-EXP_X -> , EXP
+-EXP_X -> , EXP EXP_X
