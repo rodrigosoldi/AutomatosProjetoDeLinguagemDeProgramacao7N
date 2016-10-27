@@ -29,7 +29,6 @@ AEXP   -> AEXP + MEXP
         | AEXP - MEXP
         | MEXP
 MEXP   -> MEXP * SEXP
-        | MEXP / SEXP
         | SEXP
 SEXP   -> ! SEXP
         | - SEXP

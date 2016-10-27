@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AC2941981DC179A000262474 /* Productions.c in Sources */ = {isa = PBXBuildFile; fileRef = AC2941971DC179A000262474 /* Productions.c */; };
+		AC29419A1DC1870D00262474 /* HardProductions.c in Sources */ = {isa = PBXBuildFile; fileRef = AC2941991DC1870D00262474 /* HardProductions.c */; };
 		ACF4841D1D9A0E1500B949C3 /* ReadFile.c in Sources */ = {isa = PBXBuildFile; fileRef = ACF4841C1D9A0E1500B949C3 /* ReadFile.c */; };
 		ACF6B85B1DC0118300D15509 /* ListNode.c in Sources */ = {isa = PBXBuildFile; fileRef = ACF6B85A1DC0118300D15509 /* ListNode.c */; };
 		ECE2A5CB1D9078F000EB29AC /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = ECE2A5CA1D9078F000EB29AC /* main.c */; };
@@ -26,6 +28,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		AC2941971DC179A000262474 /* Productions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Productions.c; sourceTree = "<group>"; };
+		AC2941991DC1870D00262474 /* HardProductions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = HardProductions.c; sourceTree = "<group>"; };
 		ACF4841C1D9A0E1500B949C3 /* ReadFile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ReadFile.c; sourceTree = "<group>"; };
 		ACF6B85A1DC0118300D15509 /* ListNode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ListNode.c; sourceTree = "<group>"; };
 		ECE2A5C71D9078F000EB29AC /* TestAutomato */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TestAutomato; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -67,6 +71,8 @@
 				ECE2A5CA1D9078F000EB29AC /* main.c */,
 				ECFBE6F41D959BCC006320B6 /* constants.c */,
 				ACF6B85A1DC0118300D15509 /* ListNode.c */,
+				AC2941971DC179A000262474 /* Productions.c */,
+				AC2941991DC1870D00262474 /* HardProductions.c */,
 			);
 			path = TestAutomato;
 			sourceTree = "<group>";
@@ -130,8 +136,10 @@
 			files = (
 				ECE2A5CB1D9078F000EB29AC /* main.c in Sources */,
 				ACF6B85B1DC0118300D15509 /* ListNode.c in Sources */,
+				AC2941981DC179A000262474 /* Productions.c in Sources */,
 				ACF4841D1D9A0E1500B949C3 /* ReadFile.c in Sources */,
 				ECFBE6F51D959BCC006320B6 /* constants.c in Sources */,
+				AC29419A1DC1870D00262474 /* HardProductions.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
