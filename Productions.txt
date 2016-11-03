@@ -1,0 +1,68 @@
+PROG -> MAIN
+
+MAIN -> class id ‘{‘ public static void main ‘(‘ String ‘[‘ ‘]’ id ‘)’ ‘{‘ VAR_X METODO_X ‘}’ ‘}’
+
+VAR_X -> VAR VAR_X
+VAR_X -> e
+
+METODO_X -> METODO METODO_X
+METODO_X -> e
+
+VAR -> TIPO id ;
+
+METODO -> public TIPO id ‘(‘ PARAM_X ‘)’ ‘{‘ INSIDE_METODO ‘}’
+
+PARAM_X -> PARAM PARAM_Y
+PARAM_Y -> , PARAM_X
+PARAM -> TIPO id
+
+INSIDE_METODO -> VAR_X CMD_X
+
+CMD_X -> CMDS return EXP ;
+CMD_X -> e
+
+CMDS -> CMD CMDS
+CMDS -> e
+
+TIPO -> int ‘[‘ ‘]’
+TIPO -> boolean
+TIPO -> int
+TIPO -> id
+
+CMD -> ‘{‘ ‘}’
+CMD -> ‘{‘CMD_X ‘}’
+CMD -> id = EXP ;
+CMD -> if ‘(‘ EXP ‘)’ CMD
+CMD -> if ‘(‘ EXP ‘)’ CMD else CMD
+CMD -> System.out.println ‘(‘ EXP ‘)’ ;
+
+EXP -> EXP && REXP
+EXP -> REXP
+REXP -> REXP < AEXP
+REXP -> REXP == AEXP
+REXP -> REXP != AEXP
+REXP -> AEXP
+AEXP -> AEXP + MEXP
+AEXP -> AEXP - MEXP
+AEXP -> MEXP
+MEXP -> MEXP * SEXP
+MEXP -> SEXP
+SEXP -> ! SEXP
+SEXP -> - SEXP
+SEXP -> true
+SEXP -> false
+SEXP -> num
+SEXP -> null
+SEXP -> PEXP . length
+SEXP -> PEXP
+PEXP -> id
+PEXP -> this
+PEXP -> new id ‘(‘ ‘)’
+PEXP -> ‘(‘ EXP ‘)’
+PEXP -> PEXP . id
+PEXP -> PEXP . id ‘(‘ ‘)’ 
+PEXP -> PEXP . id ‘(‘ EXPS ‘)’ 
+EXPS -> EXP
+EXPS -> EXP EXP_X
+EXP_X -> , EXP
+EXP_X -> , EXP EXP_X
