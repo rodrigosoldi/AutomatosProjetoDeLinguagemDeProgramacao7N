@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include "constants.c"
 #include "ReadFile.c"
+#include "Productions.c"
 
 // Functions
 int checkTransitionFunction(char, int);
@@ -37,8 +38,10 @@ char *variables[100];
 FILE *file;
 
 int main() {
+    
+    createProductions();
     createTransitionFunctions();
-
+    
     char cwd[1024];
     char cwd2[1024];
     
@@ -78,7 +81,7 @@ int checkTransitionFunction(char symbol, int currentState) {
 // Iterate over word and calls checkTransitionFunction
 int makeTransitionFunction(char * lexeme) {
     int it = 0;
-
+    
     int finalState = 0;
     while(lexeme[it] != '\0') {
         if((finalState = checkTransitionFunction(lexeme[it++], finalState)) < 0) {
@@ -91,7 +94,7 @@ int makeTransitionFunction(char * lexeme) {
 ////////////////////////////////////////////////
 
 void generateTokens() {
-   
+    
     char *tokensString = malloc(1000);
     char *tokens[LIST->count];
     
@@ -103,20 +106,21 @@ void generateTokens() {
         char *virg = ",";
         
         char *token = malloc(1024 * sizeof(char));
-        
-        strcat(token, minor);
-        strcat(token, aux->class);
-        
-        if (aux->parameter != NULL) {
-            strcat(token, virg);
-            strcat(token, aux->parameter);
+        if (aux->class != NULL) {
+            
+            strcat(token, minor);
+            strcat(token, aux->class);
+            
+            if (aux->parameter != NULL) {
+                strcat(token, virg);
+                strcat(token, aux->parameter);
+            }
+            
+            strcat(token, major);
+            
+            strcat(tokensString, token);
+            strcat(tokensString, "\n");
         }
-        
-        strcat(token, major);
-        
-        strcat(tokensString, token);
-        strcat(tokensString, "\n");
-        
         aux = aux->next;
     }
     
@@ -281,6 +285,7 @@ void tokenForState(int state, ListNode *listNode) {
         }
         default:
             printf("ERRO NA LEITURA\n\n");
+            generateTokens();
             exit(1);
             break;
     }
@@ -302,7 +307,7 @@ char * checkExistVariable(char *var) {
         return  createNewVariable(var);
     }
     
-    int it;    
+    int it;
     for (it = 0; it < sizeVariables; it++) {
         
         if (strcmpa(variables[it], var) == 0) {
@@ -363,7 +368,7 @@ void createTransitionFunctions() {
         }
         dfa[myCurrentState]['_'] = 132;
     }
-
+    
     
     //transition functions for boolean
     dfa[0][b] = 1;
@@ -553,7 +558,7 @@ void createTransitionFunctions() {
     dfa[0][nine] = 131;
     dfa[131][nine] = 131;
     /***/
-   dfa[0][times] = 111;
+    dfa[0][times] = 111;
     
-
+    
 }
