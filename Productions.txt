@@ -2,19 +2,20 @@ PROG -> MAIN
 
 MAIN -> class id ‘{‘ public static void main ‘(‘ String ‘[‘ ‘]’ id ‘)’ ‘{‘ VAR_X METODO_X ‘}’ ‘}’
 
-VAR_X -> VAR VAR_X
+VAR_X -> VAR_Y VAR_X
 VAR_X -> e
 
-METODO_X -> METODO METODO_X
+METODO_X -> METODO_Y METODO_X
 METODO_X -> e
 
-VAR -> TIPO id ;
+VAR_Y -> TIPO id ;
 
-METODO -> public TIPO id ‘(‘ PARAM_X ‘)’ ‘{‘ INSIDE_METODO ‘}’
+METODO_Y -> public TIPO id ‘(‘ PARAM_X ‘)’ ‘{‘ INSIDE_METODO ‘}’
 
 PARAM_X -> PARAM PARAM_Y
 PARAM_Y -> , PARAM_X
 PARAM -> TIPO id
+PRAM_Y -> e
 
 INSIDE_METODO -> VAR_X CMD_X
 

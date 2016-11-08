@@ -32,8 +32,6 @@ typedef struct list {
 
 static void printListNode(ListNode *listNode);
 
-
-
 // Functions ----
 
 static List * createList() {
