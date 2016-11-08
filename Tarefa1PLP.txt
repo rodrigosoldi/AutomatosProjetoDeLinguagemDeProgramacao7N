@@ -33,6 +33,7 @@ AEXP   -> AEXP + MEXP
         | AEXP - MEXP
         | MEXP
 MEXP   -> MEXP * SEXP
+        | MEXP / SEXP
         | SEXP
 SEXP   -> ! SEXP
         | - SEXP
@@ -51,3 +52,159 @@ PEXP   -> id
         | PEXP . id
         | PEXP . id '(' [EXPS] ')'
 EXPS   -> EXP {, EXP}
+
+***
+“””
+PROG -> MAIN
+
+MAIN -> class id ‘{‘ public static void main ‘(‘ String ‘[‘ ‘]’ id ‘)’ ‘{‘ VAR_X METODO_X ‘}’ ‘}’
+
+VAR_X -> VAR VAR_X
+VAR_X -> e
+
+METODO_X -> METODO METODO_X
+METODO_X -> e
+
+VAR -> TIPO id ;
+
+METODO -> public TIPO id ‘(‘ PARAM_X ‘)’ ‘{‘ INSIDE_METODO ‘}’
+
+def METODO(s):
+	s = consume(“public”, s)
+	s = TIPO(s)
+	s = consume(“id”, s)
+	s = consume(“(“, s)
+	s = PARAM_X(s)
+	s = consume(“)“, s)
+	s = consume(“{“, s)
+	s = INSIDE_METODO(s)
+	s = consume(“}”, s)
+	return s
+
+PARAM_X -> PARAM PARAM_Y
+PARAM_Y -> , PARAM_X
+PARAM -> TIPO id
+
+def PARAM_X(s):
+	s = PARAM(s)
+	s = PARAM_Y(s)
+	return s
+
+def PARAM_Y(s):
+	s = consume(“,”, s)
+	s = PARAM_X(s)
+	return s
+
+def PARAM(s):
+	s = TIPO(s)
+	s = consume(“id”, s)
+	return s
+
+*** PROCEDURE!!! ***
+
+INSIDE_METODO -> VAR_X CMD_X
+
+def INSIDE_METODO(s):
+	s = VAR_X(s)
+	s = CMD_X(s)
+	return s
+
+CMD_X -> CMDS return EXP ;
+CMD_X -> e
+
+def CMD_X(s):
+	if s[0] == “{“ || s[0] == “id” || s[0] == “if” || s[0] == “System.out.println”:
+		s = CMDS(s)
+		s = consume(“return”)
+		s = EXP(s)
+		s = consume(“;”)
+		return s
+	else:
+		return s
+
+CMDS -> CMD CMDS
+CMDS -> e
+
+def CMDS(s):
+	if s[0] == “{“ or s[0] == “id” or s[0] == “if” or s[0] == “System.out.println”:
+		s = CMD(s)
+		s = CMDS(s)
+		return s
+	else:
+		return s
+
+TIPO -> int ‘[‘ ‘]’
+TIPO -> boolean
+TIPO -> int
+TIPO -> id
+
+def TIPO(s):
+	if s[0] == “int” and s[1] == “[“:
+		s = consume(“int”, s)
+		s = consume(“[“, s)
+		s = consume(“]”, s)
+		return s
+	elif s[0] == “boolean”:
+		s = consume(“boolean”, s)
+		return s
+	elif s[0] == “int”:
+		s = consume(“int”, s)
+		return s
+	elif s[0] == “id”:
+		s = consume(“id”, s)
+		return s
+
+CMD -> ‘{‘CMD_X ‘}’
+CMD -> id = EXP ;
+CMD -> if ‘(‘ EXP ‘)’ CMD
+CMD -> if ‘(‘ EXP ‘)’ CMD else CMD
+CMD -> System.out.println ‘(‘ EXP ‘)’ ;
+
+def CMD(s):
+	s = consume(“cmd”, s)
+	return s
+
+/***************/
+EXP -> REXP EXP_X
+EXP_X -> && EXP
+EXP_X -> e
+
+REXP -> REXP < AEXP
+REXP -> REXP == AEXP
+REXP -> REXP != AEXP
+
+REXP -> AEXP REXP_X
+REXP_X -> < REXP
+REXP_X -> e
+
+AEXP -> MEXP AEXP_X
+AEXP_X -> + AEXP
+AEXP_X -> - AEXP
+AEXP_X -> e
+
+MEXP -> SEXP MEXP_X
+MEXP_X -> * MEXP
+MEXP_X -> e
+
+SEXP -> ! SEXP
+SEXP -> - SEXP
+SEXP -> true
+SEXP -> false
+SEXP -> num
+SEXP -> null
+SEXP -> PEXP . length
+SEXP -> PEXP
+PEXP -> id
+PEXP -> this
+PEXP -> new id ‘(‘ ‘)’
+PEXP -> ‘(‘ EXP ‘)’
+
+PEXP -> id PEXP_X
+PEXP_X -> . PEXP
+PEXP_X -> e
+
+EXPS -> EXP EXP_X
+EXP_X -> , EXPS
+EXP_X -> e
+/*****************/
+“””

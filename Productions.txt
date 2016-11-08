@@ -1,25 +1,28 @@
 “””
 PROG -> MAIN
 
-MAIN -> class id ‘{‘ public static void main ‘(‘ String ‘[‘ ‘]’ id ‘)’ ‘{‘ VAR_X METODO_X ‘}’ ‘}’
+MAIN -> class id ‘{‘ public static void main ‘(‘ String ‘[‘ ‘]’ id ‘)’ ‘{‘ VAR_X ‘}’ METODO_X ‘}’
 
-VAR_X -> VAR VAR_X
+VAR_X -> VAR_Y VAR_X
 VAR_X -> e
 
 METODO_X -> METODO METODO_X
 METODO_X -> e
 
-VAR -> TIPO id ;
+VAR_Y -> TIPO id ;
 
 METODO -> public TIPO id ‘(‘ PARAM_X ‘)’ ‘{‘ INSIDE_METODO ‘}’
 
 PARAM_X -> PARAM PARAM_Y
 PARAM_Y -> , PARAM_X
+PARAM_Y -> e
 PARAM -> TIPO id
+
+*** PROCEDURE!!! ***
 
 INSIDE_METODO -> VAR_X CMD_X
 
-CMD_X -> CMDS return EXP ;
+CMD_X -> CMDS return EXP1 ;
 CMD_X -> e
 
 CMDS -> CMD CMDS
@@ -30,16 +33,16 @@ TIPO -> boolean
 TIPO -> int
 TIPO -> id
 
-CMD -> ‘{‘ ‘}’
-CMD -> ‘{‘CMD_X ‘}’
-CMD -> id = EXP ;
-CMD -> if ‘(‘ EXP ‘)’ CMD
-CMD -> if ‘(‘ EXP ‘)’ CMD else CMD
-CMD -> System.out.println ‘(‘ EXP ‘)’ ;
+CMD -> ‘{‘ CMDS ‘}’
+CMD -> id = EXP1 ;
+CMD -> if ‘(‘ EXP1 ‘)’ CMD ELSE_X
+CMD -> System.out.println ‘(‘ EXP1 ‘)’ ;
 
-/***************/
-EXP -> REXP EXP_X
-EXP_X -> && EXP
+ELSE_X -> else CMD
+ELSE_X -> e
+
+EXP1 -> REXP EXP_X
+EXP_X -> && EXP1
 EXP_X -> e
 
 REXP -> REXP < AEXP
@@ -70,17 +73,18 @@ SEXP -> PEXP
 PEXP -> id
 PEXP -> this
 PEXP -> new id ‘(‘ ‘)’
-PEXP -> ‘(‘ EXP ‘)’
+PEXP -> ‘(‘ EXP1 ‘)’
 
 PEXP -> id PEXP_X
 PEXP_X -> . PEXP
 PEXP_X -> e
 
-EXPS -> EXP EXP_X
+EXPS -> EXP1 EXP_X
 EXP_X -> , EXPS
 EXP_X -> e
+
 /*****************/
-“””
+
 
 def consume(tok, s):
 	w = s[0]
@@ -122,4 +126,88 @@ def VAR_X(s):
 		return s
 	else:
 		return s
+
+def METODO_X(s):
+	if s[0] == “public”:
+		s = METODO(s)
+		s = MEOTOD_X(s)
+		return s
+	else:
+		return s
+
+def VAR(s):
+	s = TIPO(s)
+	s = consume(“id”, s)
+	s = consume(“;”, s)
+	return s
+
+def METODO(s):
+	s = consume(“public”, s)
+	s = TIPO(s)
+	s = consume(“id”, s)
+	s = consume(“(“, s)
+	s = PARAM_X(s)
+	s = consume(“)“, s)
+	s = consume(“{“, s)
+	s = INSIDE_METODO(s)
+	s = consume(“}”, s)
+	return s
+
+def PARAM_X(s):
+	s = PARAM(s)
+	s = PARAM_Y(s)
+	return s
+
+def PARAM_Y(s):
+	s = consume(“,”, s)
+	s = PARAM_X(s)
+	return s
+
+def PARAM(s):
+	s = TIPO(s)
+	s = consume(“id”, s)
+	return s
+
+def INSIDE_METODO(s):
+	s = VAR_X(s)
+	s = CMD_X(s)
+	return s
+
+def CMD_X(s):
+	if s[0] == “{“ || s[0] == “id” || s[0] == “if” || s[0] == “System.out.println”:
+		s = CMD(s)
+		s = consume(“return”)
+		s = EXP(s)
+		s = consume(“;”)
+		return s
+	else:
+		return s
+
+def CMDS(s):
+	if s[0] == “{“ or s[0] == “id” or s[0] == “if” or s[0] == “System.out.println”:
+		s = CMD(s)
+		s = CMDS(s)
+		return s
+	else:
+		return s
+
+def TIPO(s):
+	if s[0] == “int” and s[1] == “[“:
+		s = consume(“int”, s)
+		s = consume(“[“, s)
+		s = consume(“]”, s)
+		return s
+	elif s[0] == “boolean”:
+		s = consume(“boolean”, s)
+		return s
+	elif s[0] == “int”:
+		s = consume(“int”, s)
+		return s
+	elif s[0] == “id”:
+		s = consume(“id”, s)
+		return s
+
+def CMD(s):
+	s = consume(“cmd”, s)
+	return s
 

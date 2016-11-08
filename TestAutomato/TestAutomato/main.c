@@ -20,6 +20,17 @@ void var_x();
 int var_y();
 int tipo();
 int tipo1();
+int param();
+int param_y();
+int cmd_x();
+int cmds();
+int cmd();
+int exp1();
+int else_x();
+void metodo_x();
+int param_x();
+int inside_metodo();
+int metodo();
 int consume(char *token);
 void consumeAux(char *token);
 
@@ -582,6 +593,7 @@ void PROG() {
     MAIN();
 }
 
+
 void MAIN() {
     consumeAux("class");
     consumeAux("ID");
@@ -599,6 +611,7 @@ void MAIN() {
     consumeAux("{");
     var_x();
     consumeAux("}");
+    metodo_x();
     consumeAux("}");
 }
 
@@ -614,6 +627,119 @@ int var_y() {
     }
     
     return 0;
+}
+
+void metodo_x() {
+    while (metodo()) {}
+}
+
+
+int metodo() {
+    if (consume("public")) {
+        if (tipo()) {
+            consumeAux("ID");
+            consumeAux("(");
+            param_x();
+            consumeAux(")");
+            consumeAux("{");
+            inside_metodo();
+            consumeAux("}");
+            return 1;
+        }
+    }
+    
+    return 0;
+}
+
+
+int param_x() {
+    if (param()) {
+        return param_y();
+    }
+    return 0;
+}
+
+int param() {
+    if (tipo()) {
+        return consume("ID");
+    }
+    
+    return 0;
+}
+
+int param_y() {
+    if (!consume(",")) {
+        return 1;
+    }
+    
+    consumeAux(",");
+    return param_x();
+}
+
+int inside_metodo() {
+    var_x();
+    return cmd_x();
+}
+
+int cmd_x() {
+    if (cmds()) {
+        consumeAux("return");
+        if (exp1()) {
+            return consume(";");
+        }
+        
+        return 0;
+    }
+    
+    return 1;
+}
+
+int cmds() {
+    while (cmd()) ;
+    
+    return 1;
+}
+
+int cmd() {
+    
+    if (consume("{")) {
+        cmds();
+        return consume("}");
+    } else if (consume("ID")) {
+        consumeAux("=");
+        exp1();
+        return consume(";");
+    } else if (consume("if")) {
+        consumeAux("(");
+        if (exp1()) {
+            consumeAux(")");
+            
+            if (cmd()) {
+                return else_x();
+            }
+        }
+        return 0;
+    } else if (consume("System.out.println")) {
+        consumeAux("(");
+        if (exp1()) {
+            consumeAux(")");
+            return consume(";");
+        }
+    }
+    
+    return 0;
+}
+
+int else_x() {
+    if (consume("else")) {
+        return cmd();
+    }
+    
+    return 1;
+}
+
+int exp1() {
+    return consume("ID");
 }
 
 int tipo() {
