@@ -1,21 +1,21 @@
+“””
 PROG -> MAIN
 
 MAIN -> class id ‘{‘ public static void main ‘(‘ String ‘[‘ ‘]’ id ‘)’ ‘{‘ VAR_X METODO_X ‘}’ ‘}’
 
-VAR_X -> VAR_Y VAR_X
+VAR_X -> VAR VAR_X
 VAR_X -> e
 
-METODO_X -> METODO_Y METODO_X
+METODO_X -> METODO METODO_X
 METODO_X -> e
 
-VAR_Y -> TIPO id ;
+VAR -> TIPO id ;
 
-METODO_Y -> public TIPO id ‘(‘ PARAM_X ‘)’ ‘{‘ INSIDE_METODO ‘}’
+METODO -> public TIPO id ‘(‘ PARAM_X ‘)’ ‘{‘ INSIDE_METODO ‘}’
 
 PARAM_X -> PARAM PARAM_Y
 PARAM_Y -> , PARAM_X
 PARAM -> TIPO id
-PRAM_Y -> e
 
 INSIDE_METODO -> VAR_X CMD_X
 
@@ -38,17 +38,27 @@ CMD -> if ‘(‘ EXP ‘)’ CMD else CMD
 CMD -> System.out.println ‘(‘ EXP ‘)’ ;
 
 /***************/
-EXP -> EXP && REXP
-EXP -> REXP
+EXP -> REXP EXP_X
+EXP_X -> && EXP
+EXP_X -> e
+
 REXP -> REXP < AEXP
 REXP -> REXP == AEXP
 REXP -> REXP != AEXP
-REXP -> AEXP
-AEXP -> AEXP + MEXP
-AEXP -> AEXP - MEXP
-AEXP -> MEXP
-MEXP -> MEXP * SEXP
-MEXP -> SEXP
+
+REXP -> AEXP REXP_X
+REXP_X -> < REXP
+REXP_X -> e
+
+AEXP -> MEXP AEXP_X
+AEXP_X -> + AEXP
+AEXP_X -> - AEXP
+AEXP_X -> e
+
+MEXP -> SEXP MEXP_X
+MEXP_X -> * MEXP
+MEXP_X -> e
+
 SEXP -> ! SEXP
 SEXP -> - SEXP
 SEXP -> true
@@ -61,11 +71,55 @@ PEXP -> id
 PEXP -> this
 PEXP -> new id ‘(‘ ‘)’
 PEXP -> ‘(‘ EXP ‘)’
-PEXP -> PEXP . id
-PEXP -> PEXP . id ‘(‘ ‘)’ 
-PEXP -> PEXP . id ‘(‘ EXPS ‘)’ 
-EXPS -> EXP
+
+PEXP -> id PEXP_X
+PEXP_X -> . PEXP
+PEXP_X -> e
+
 EXPS -> EXP EXP_X
-EXP_X -> , EXP
-EXP_X -> , EXP EXP_X
+EXP_X -> , EXPS
+EXP_X -> e
 /*****************/
+“””
+
+def consume(tok, s):
+	w = s[0]
+	s = s[1:]
+	if w != tok:
+		print w, s, tok
+		print 10/0
+	return s
+
+
+def PROG(s):
+	return MAIN(s)
+
+def MAIN(s):
+	s = consume(“class”, s)
+	s = consume(“id”, s)
+	s = consume(“{“, s)
+	s = consume(“public”, s)
+	s = consume(“static”, s)
+	s = consume(“void”, s)
+	s = consume(“main”, s)
+	s = consume(“(“, s)
+	s = consume(“String”, s)
+	s = consume(“[“, s)
+	s = consume(“]”, s)
+	s = consume(“id”, s)
+	s = consume(“)”, s)
+	s = consume(“{“, s)
+	s = VAR_X(s)
+	s = METODO_X(s)
+	s = consume(“}”, s)
+	s = consume(“}”, s)
+	return s
+
+def VAR_X(s):
+	if s[0] == “int” || s[0] == “boolean” || s[0] == “int” || s[0] == “id”:
+		s = TIPO(s)
+		s = VAR_X(s)
+		return s
+	else:
+		return s
+
