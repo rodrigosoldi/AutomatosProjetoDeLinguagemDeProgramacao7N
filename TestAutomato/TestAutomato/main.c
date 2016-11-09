@@ -42,8 +42,10 @@ int else_x();
 int ponto_x();
 void metodo_x();
 int param_x();
+int return_x();
 int inside_metodo();
 int metodo();
+int peek(char *token);
 int consume(char *token);
 void consumeAux(char *token);
 
@@ -611,21 +613,20 @@ void MAIN() {
     consumeAux("class");
     consumeAux("ID");
     consumeAux("{");
-    consumeAux("public");
-    consumeAux("static");
-    consumeAux("void");
-    consumeAux("main");
-    consumeAux("(");
-    consumeAux("String");
-    consumeAux("[");
-    consumeAux("]");
-    consumeAux("ID");
-    consumeAux(")");
-    consumeAux("{");
-    var_x();
-    inside_metodo();
-    consumeAux("}");
-//    metodo_x();
+        consumeAux("public");
+        consumeAux("static");
+        consumeAux("void");
+        consumeAux("main");
+        consumeAux("(");
+            consumeAux("String");
+            consumeAux("[");
+            consumeAux("]");
+            consumeAux("ID");
+        consumeAux(")");
+        consumeAux("{");
+            inside_metodo();
+        consumeAux("}");
+        metodo_x();
     consumeAux("}");
 }
 
@@ -644,7 +645,7 @@ int var_y() {
 }
 
 void metodo_x() {
-    while (metodo()) {}
+    while (aux->next != NULL && metodo()) {}
 }
 
 
@@ -891,7 +892,7 @@ int tipo() {
     if (consume("boolean")) {
         return 1;
     } else if (consume("ID")) {
-        return 1;
+        return (!peek("=") && !peek("+") && !peek("-") && !peek("*"));
     } else if (consume("int")) {
         return tipo1();
     }
@@ -915,6 +916,10 @@ int consume(char *token) {
     }
     
     return 0;
+}
+
+int peek(char *token) {
+    return (strcmp(aux->lexeme, token) == 0) || (strcmp(aux->class, token) == 0);
 }
 
 void consumeAux(char *token) {
