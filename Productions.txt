@@ -22,7 +22,9 @@ PARAM -> TIPO id
 
 INSIDE_METODO -> VAR_X CMD_X
 
-CMD_X -> CMDS return EXP1 ;
+CMD_X -> CMDS RETURN_X
+RETURN_X -> return EXP1 ;
+RETURN_X -> e
 CMD_X -> e
 
 CMDS -> CMD CMDS
@@ -42,16 +44,17 @@ ELSE_X -> else CMD
 ELSE_X -> e
 
 EXP1 -> REXP EXP_X
+EXP1 -> id '(' ')'
 EXP_X -> && EXP1
 EXP_X -> e
-
-REXP -> REXP < AEXP
-REXP -> REXP == AEXP
-REXP -> REXP != AEXP
 
 REXP -> AEXP REXP_X
 REXP_X -> < REXP
 REXP_X -> e
+
+REXP_X -> == REXP
+REXP_X -> != REXP
+
 
 AEXP -> MEXP AEXP_X
 AEXP_X -> + AEXP
@@ -68,20 +71,22 @@ SEXP -> true
 SEXP -> false
 SEXP -> num
 SEXP -> null
-SEXP -> PEXP . length
-SEXP -> PEXP
-PEXP -> id
+SEXP -> PEXP PONTO_X
+
+PONTO_X -> . length
+PONTO_X -> e
+
 PEXP -> this
 PEXP -> new id ‘(‘ ‘)’
-PEXP -> ‘(‘ EXP1 ‘)’
-
+PEXP -> ‘(‘ EXP1 ‘)’ PEXP_X
 PEXP -> id PEXP_X
+
 PEXP_X -> . PEXP
+PEXP_X -> '(' EXP1 ')'
 PEXP_X -> e
 
 EXPS -> EXP1 EXP_X
 EXP_X -> , EXPS
-EXP_X -> e
 
 /*****************/
 

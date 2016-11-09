@@ -26,7 +26,20 @@ int cmd_x();
 int cmds();
 int cmd();
 int exp1();
+int rexp();
+int exp_x();
+int aexp();
+int aexp_x();
+int rexp_x();
+int mexp();
+int mexp_x();
+int sexp();
+int sexp_x();
+int pexp();
+int pexp_x();
+int exps();
 int else_x();
+int ponto_x();
 void metodo_x();
 int param_x();
 int inside_metodo();
@@ -610,8 +623,9 @@ void MAIN() {
     consumeAux(")");
     consumeAux("{");
     var_x();
+    inside_metodo();
     consumeAux("}");
-    metodo_x();
+//    metodo_x();
     consumeAux("}");
 }
 
@@ -683,7 +697,14 @@ int inside_metodo() {
 
 int cmd_x() {
     if (cmds()) {
-        consumeAux("return");
+        return return_x();
+    }
+    
+    return 1;
+}
+
+int return_x() {
+    if (consume("return")) {
         if (exp1()) {
             return consume(";");
         }
@@ -739,7 +760,131 @@ int else_x() {
 }
 
 int exp1() {
-    return consume("ID");
+    if (rexp()) {
+        return exp_x();
+    } else if (consume("ID")) {
+        consumeAux("(");
+        return consume(")");
+    }
+    
+    return 0;
+}
+
+int exp_x() {
+    if (consume("&&")) {
+        return exp1();
+    }
+    
+    return 1;
+}
+
+int rexp() {
+    if (aexp()) {
+        return rexp_x();
+    }
+    
+    return 0;
+}
+
+int rexp_x() {
+    if (consume("<")) {
+        return rexp();
+    } else if (consume("==")) {
+        return rexp();
+    } else if (consume("!=")) {
+        return rexp();
+    }
+    return 1;
+}
+
+int aexp() {
+    
+    if (mexp()) {
+        return aexp_x();
+    }
+    
+    return 0;
+}
+
+int aexp_x() {
+    if (consume("+") || consume("-")) {
+        return aexp();
+    }
+    
+    return 1;
+}
+
+int mexp() {
+    
+    if (sexp()) {
+        return mexp_x();
+    }
+    
+    return 0;
+}
+
+int mexp_x() {
+    if (consume("*")) {
+        return mexp();
+    }
+    
+    return 1;
+}
+
+int sexp() {
+    
+    if (consume("!") || consume("-")) {
+        return sexp();
+    } else if ( consume("true") || consume("false") || consume("number") || consume("null") ) {
+        return 1;
+    } else if (pexp()) {
+        return pexp_x();
+    }
+    
+    return 0;
+    
+    //return consume("ID") || consume("number");
+}
+
+int ponto_x() {
+    return consume("length");
+}
+
+int pexp() {
+    if (consume("this")) {
+        return 1;
+    } else if (consume("new")) {
+        consumeAux("ID");
+        consumeAux("(");
+        consumeAux(")");
+        return 1;
+    } else if (consume("(")) {
+        if (exp1()) {
+            if (consume(")")) {
+                return pexp_x();
+            }
+        }
+    } else if (consume("ID")) {
+        return pexp_x();
+    }
+    
+    return 0;
+}
+
+int pexp_x() {
+    
+    if (consume(".")) {
+        if (ponto_x()) {
+            return 1;
+        }
+        
+        return pexp();
+    } else if (consume("(")) {
+        exp1();
+        return consume(")");
+    }
+    
+    return 1;
 }
 
 int tipo() {
