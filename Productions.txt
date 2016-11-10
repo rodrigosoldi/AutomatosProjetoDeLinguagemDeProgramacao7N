@@ -39,6 +39,7 @@ TIPO -> int
 TIPO -> id
 
 CMD -> ‘{‘ CMDS ‘}’
+CMD -> MY_VAR ;
 CMD -> MY_VAR = EXP1 ;
 CMD -> if ‘(‘ EXP1 ‘)’ CMD ELSE_X
 CMD -> System.out.println ‘(‘ EXP1 ‘)’ ;
