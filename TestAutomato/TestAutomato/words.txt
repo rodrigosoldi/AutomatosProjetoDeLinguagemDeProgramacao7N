@@ -40,8 +40,6 @@ num
 {
 int
 numaux
-=
-2
 ;
 if
 (

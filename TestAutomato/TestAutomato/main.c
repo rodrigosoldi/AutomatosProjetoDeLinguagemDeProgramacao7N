@@ -766,11 +766,14 @@ int cmd() {
             return consume(";");
         }
     } else if (my_var()) {
-        consumeAux("=");
-        exp1();
-        return consume(";");
+        if (peek("=")) {
+            consumeAux("=");
+            exp1();
+            return consume(";");
+        } else {
+            return consume(";");
+        }
     }
-    
     return 0;
 }
 
