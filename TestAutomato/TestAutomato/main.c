@@ -622,6 +622,10 @@ void MAIN() {
     consumeAux("{");
     inside_class();
     consumeAux("}");
+    
+    if (aux != NULL && aux->next != NULL && peek("class")) {
+        MAIN();
+    }
 }
 
 void inside_class() {
