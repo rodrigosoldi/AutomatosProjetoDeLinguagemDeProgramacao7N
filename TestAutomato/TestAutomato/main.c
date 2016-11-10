@@ -16,6 +16,7 @@
 
 void MAIN();
 void PROG();
+void inside_class();
 void var_x();
 int var_y();
 int tipo();
@@ -25,6 +26,7 @@ int param_y();
 int cmd_x();
 int cmds();
 int cmd();
+int my_var();
 int exp1();
 int rexp();
 int exp_x();
@@ -46,6 +48,7 @@ int return_x();
 int inside_metodo();
 int metodo();
 int peek(char *token);
+int peek2(char *token);
 int consume(char *token);
 void consumeAux(char *token);
 
@@ -259,6 +262,10 @@ void tokenForState(int state, ListNode *listNode) {
         case 117:
             listNode->class = "OP";
             listNode->parameter = "MN";
+            break;
+        case 119:
+            listNode->class = "OP";
+            listNode->parameter = "DF";
             break;
         case 121:
             listNode->class = "OP";
@@ -613,6 +620,12 @@ void MAIN() {
     consumeAux("class");
     consumeAux("ID");
     consumeAux("{");
+    inside_class();
+    consumeAux("}");
+}
+
+void inside_class() {
+    if (peek2("static")) {
         consumeAux("public");
         consumeAux("static");
         consumeAux("void");
@@ -627,7 +640,9 @@ void MAIN() {
             inside_metodo();
         consumeAux("}");
         metodo_x();
-    consumeAux("}");
+    } else {
+        metodo_x();
+    }
 }
 
 void var_x() {
@@ -692,7 +707,6 @@ int param_y() {
 }
 
 int inside_metodo() {
-    var_x();
     return cmd_x();
 }
 
@@ -727,10 +741,6 @@ int cmd() {
     if (consume("{")) {
         cmds();
         return consume("}");
-    } else if (consume("ID")) {
-        consumeAux("=");
-        exp1();
-        return consume(";");
     } else if (consume("if")) {
         consumeAux("(");
         if (exp1()) {
@@ -747,8 +757,27 @@ int cmd() {
             consumeAux(")");
             return consume(";");
         }
+    } else if (my_var()) {
+        consumeAux("=");
+        exp1();
+        return consume(";");
     }
     
+    return 0;
+}
+
+int my_var() {
+    if (consume("ID")) {
+        if (peek("ID")) {
+            consume("ID");
+        }
+        return 1;
+    } else if (tipo()) {
+        if (peek("ID")) {
+            consume("ID");
+        }
+        return 1;
+    }
     return 0;
 }
 
@@ -891,6 +920,8 @@ int pexp_x() {
 int tipo() {
     if (consume("boolean")) {
         return 1;
+    } else if (consume("void")) {
+        return 1;
     } else if (consume("ID")) {
         return (!peek("=") && !peek("+") && !peek("-") && !peek("*"));
     } else if (consume("int")) {
@@ -920,6 +951,10 @@ int consume(char *token) {
 
 int peek(char *token) {
     return (strcmp(aux->lexeme, token) == 0) || (strcmp(aux->class, token) == 0);
+}
+
+int peek2(char *token) {
+    return (strcmp(aux->next->lexeme, token) == 0) || (strcmp(aux->next->class, token) == 0);
 }
 
 void consumeAux(char *token) {

@@ -1,7 +1,10 @@
 “””
 PROG -> MAIN
 
-MAIN -> class id ‘{‘ public static void main ‘(‘ String ‘[‘ ‘]’ id ‘)’ ‘{‘ VAR_X INSIDE_METODO ‘}’ METODO_X ‘}’
+MAIN -> class id ‘{‘ INSIDE_CLASS ‘}’
+
+INSIDE_CLASS -> public static void main ‘(‘ String ‘[‘ ‘]’ id ‘)’ ‘{‘ INSIDE_METODO ‘}’ METODO_X
+INSIDE_CLASS -> METODO_X
 
 VAR_X -> VAR_Y VAR_X
 VAR_X -> e
@@ -20,7 +23,7 @@ PARAM -> TIPO id
 
 *** PROCEDURE!!! ***
 
-INSIDE_METODO -> VAR_X CMD_X
+INSIDE_METODO -> CMD_X
 
 CMD_X -> CMDS RETURN_X
 RETURN_X -> return EXP1 ;
@@ -36,9 +39,12 @@ TIPO -> int
 TIPO -> id
 
 CMD -> ‘{‘ CMDS ‘}’
-CMD -> id = EXP1 ;
+CMD -> MY_VAR = EXP1 ;
 CMD -> if ‘(‘ EXP1 ‘)’ CMD ELSE_X
 CMD -> System.out.println ‘(‘ EXP1 ‘)’ ;
+
+MY_VAR -> id
+MY_VAR -> id id
 
 ELSE_X -> else CMD
 ELSE_X -> e
