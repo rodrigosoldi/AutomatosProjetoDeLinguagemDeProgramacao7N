@@ -1,5 +1,5 @@
 “””
-PROG -> MAIN
+PROG -> MAIN 
 
 MAIN -> class id ‘{‘ INSIDE_CLASS ‘}’
 

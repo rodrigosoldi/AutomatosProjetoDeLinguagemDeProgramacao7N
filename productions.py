@@ -127,5 +127,5 @@ def CMD(s):
 	s = consume("c", s)
 	return s
 
-s = "class id { public static void main ( String [ ] id ) { } }".split()
+s = "class id { public static void main ( String [ ] id ) {  } }".split()
 PROG(s)
