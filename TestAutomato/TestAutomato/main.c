@@ -673,7 +673,11 @@ int metodo() {
         if (tipo()) {
             consumeAux("ID");
             consumeAux("(");
-            param_x();
+            if (!peek(")")) {
+                if (!param_x()) {
+                    consumeAux("ERROOOOU");
+                }
+            }
             consumeAux(")");
             consumeAux("{");
             inside_metodo();
