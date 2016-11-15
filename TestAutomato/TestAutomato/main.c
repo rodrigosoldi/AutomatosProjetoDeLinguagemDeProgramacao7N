@@ -12,7 +12,6 @@
 #include <unistd.h>
 #include "constants.c"
 #include "ReadFile.c"
-#include "Productions.c"
 
 void MAIN();
 void PROG();
@@ -109,10 +108,13 @@ int main() {
         aux = aux->next;
     }
     
-    printList(LIST);
+    //printList(LIST);
     generateTokens();
+    
+    printf("\nAnálise Léxica executada com sucesso\n");
     PROG();
     semantic();
+    printf("😎\n\n");
 }
 
 // Get the current state and the current carecter and return the new state
@@ -1106,5 +1108,5 @@ void semantic() {
         aux = aux->next;
     }
     
-    printf("\nAnálise Semântica completada com sucesso\n");
+    printf("\nAnálise Semântica executada com sucesso\n\n");
 }
