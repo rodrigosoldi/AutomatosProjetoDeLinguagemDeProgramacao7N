@@ -51,6 +51,7 @@ int peek(char *token);
 int peek2(char *token);
 int consume(char *token);
 void consumeAux(char *token);
+void semantic();
 
 /*******************************************************/
 
@@ -75,11 +76,16 @@ int dfa[136][136]; // matrix of transition functions
 int sizeVariables = 0;
 char *variables[100];
 
+int intSizeArray = 0;
+int stringSizeArray = 0;
+char *variablesIntToSemantic[100];
+char *variablesStringToSemantic[100];
+
 FILE *file;
 
 int main() {
     
-    createProductions();
+    //createProductions();
     createTransitionFunctions();
     
     char cwd[1024];
@@ -106,6 +112,7 @@ int main() {
     printList(LIST);
     generateTokens();
     PROG();
+    semantic();
 }
 
 // Get the current state and the current carecter and return the new state
@@ -613,6 +620,7 @@ ListNode *aux;
 void PROG() {
     aux = LIST->head;
     MAIN();
+    printf("\nAnálise sintática executada com sucesso\n");
 }
 
 
@@ -933,6 +941,8 @@ int tipo() {
         return 1;
     } else if (consume("void")) {
         return 1;
+    } else if (consume("String")) {
+        return 1;
     } else if (consume("ID")) {
         return (!peek("=") && !peek("+") && !peek("-") && !peek("*"));
     } else if (consume("int")) {
@@ -977,3 +987,124 @@ void consumeAux(char *token) {
     }
 }
 
+// ============================================================
+
+void checkExistAndAddVariableToSemantic(char *var, int *size, char *array[]) {
+    
+    int it;
+    for (it = 0; it < *size; it++) {
+        
+        if (strcmpa(array[it], var) == 0) {
+            return;
+        }
+    }
+    
+    array[*size] = var;
+    *size = *size + 1;
+}
+
+int existVariableToSemantic(char *var, int *size, char *array[]) {
+    
+    if (*size == 0) {
+        return 0;
+    }
+    
+    int it;
+    for (it = 0; it < *size; it++) {
+        
+        if (strcmpa(array[it], var) == 0) {
+            aux = aux->next;
+            return 1;
+        }
+    }
+    
+    return 0;
+}
+
+void verifyIntSemantic(char *stopCondition) {
+    while (strcmp(aux->lexeme, stopCondition) != 0) {
+        
+        if (consume("number")) {
+            continue;
+        } else if (peek("ID")) {
+            if (existVariableToSemantic(aux->lexeme, &intSizeArray, variablesIntToSemantic)) {
+                continue;
+            }
+        } else if (consume("+") || consume("-") || consume("*") || consume("(") || consume(")") || consume("this") || consume(".")) {
+            continue;
+        }
+        
+        printf("\nHouve uma falha na análise semântica - Problema com atribuição de int\n");
+        exit(1);
+    }
+}
+
+void verifyStringSemantic(char *stopCondition) {
+    while (peek(stopCondition) == 0) {
+        if (existVariableToSemantic(aux->lexeme, &stringSizeArray, variablesStringToSemantic)) {
+            continue;
+        } else if (consume("+")) {
+            continue;
+        }
+        
+        printf("\nHouve uma falha na análise semântica - Problema com atribuição de String\n");
+        exit(1);
+    }
+}
+
+void semantic() {
+    aux = LIST->head;
+    while (aux->next != NULL) {
+        
+        if (strcmp(aux->class, "int") == 0) {
+            if (strcmp(aux->next->class, "ID") == 0) {
+                checkExistAndAddVariableToSemantic(aux->next->lexeme, &intSizeArray, variablesIntToSemantic);
+            }
+        } else if (peek("String") == 1) {
+            if (peek2("ID") == 1) {
+                checkExistAndAddVariableToSemantic(aux->next->lexeme, &stringSizeArray, variablesStringToSemantic);
+            }
+        }
+        
+        
+        
+        aux = aux->next;
+    }
+    
+    aux = LIST->head;
+    while (aux->next != NULL) {
+        if (existVariableToSemantic(aux->lexeme, &intSizeArray, variablesIntToSemantic)) {
+            
+            if (consume("=")) {
+                verifyIntSemantic(";");
+            } /*else if (consume("<") || consume("==") || consume("!=") || consume("&&")) {
+                
+                while (strcmp(aux->lexeme, ")") != 0) {
+                    
+                    if (peek("ID")) {
+                        if (existVariableToSemantic(aux->lexeme)) {
+                            if (consume("+") || consume("-") || consume("*") || consume("(") || consume(")") || consume("this") || consume(".") || consume("<") || consume("==") || consume("!=")) {
+                                continue;
+                            }
+                        }
+                    }
+                    
+                    if (consume("number") || consume("&&")) {
+                        continue;
+                    }
+                    
+                    printf("\nHouve uma falha na análise semântica\n");
+                    exit(1);
+                }
+            }*/
+        } else if (existVariableToSemantic(aux->lexeme, &stringSizeArray, variablesStringToSemantic)) {
+            if (consume("=")) {
+                verifyStringSemantic(";");
+            }
+        }
+        
+        aux = aux->next;
+    }
+    
+    printf("\nAnálise Semântica completada com sucesso\n");
+}
