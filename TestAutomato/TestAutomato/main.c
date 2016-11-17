@@ -77,8 +77,12 @@ char *variables[100];
 
 int intSizeArray = 0;
 int stringSizeArray = 0;
+int booleanSizeArray = 0;
 char *variablesIntToSemantic[100];
 char *variablesStringToSemantic[100];
+char *variablesBooleanToSemantic[100];
+
+int countParenteses = 0;
 
 FILE *file;
 
@@ -114,7 +118,7 @@ int main() {
     printf("\nAnálise Léxica executada com sucesso\n");
     PROG();
     semantic();
-    printf("😎\n\n");
+    printf("Build Success 😎 !!!\n\n");
 }
 
 // Get the current state and the current carecter and return the new state
@@ -338,7 +342,7 @@ void tokenForState(int state, ListNode *listNode) {
             break;
         }
         default:
-            printf("ERRO NA LEITURA\n\n");
+            printf("\nERRO NA LEITURA - Análise Léxica\n\n");
             generateTokens();
             exit(1);
             break;
@@ -622,7 +626,14 @@ ListNode *aux;
 void PROG() {
     aux = LIST->head;
     MAIN();
-    printf("\nAnálise sintática executada com sucesso\n");
+    
+    if (countParenteses == 0) {
+        printf("\nAnálise sintática executada com sucesso\n");
+    } else {
+        printf("\nAbertura e fechamento de parênteses incorreto\nProblema na análise sintática\n\n");
+        exit(1);
+    }
+    
 }
 
 
@@ -965,6 +976,13 @@ int tipo1() {
 
 int consume(char *token) {
     if ((strcmp(aux->lexeme, token) == 0) || (strcmp(aux->class, token) == 0)) {
+        
+        if (strcmp(aux->lexeme, "(") == 0) {
+            ++countParenteses;
+        } else if (strcmp(aux->lexeme, ")") == 0) {
+            --countParenteses;
+        }
+        
         aux = aux->next;
         return 1;
     }
@@ -982,6 +1000,13 @@ int peek2(char *token) {
 
 void consumeAux(char *token) {
     if ((strcmp(aux->lexeme, token) == 0) || (strcmp(aux->class, token) == 0)) {
+        
+        if (strcmp(aux->lexeme, "(") == 0) {
+            ++countParenteses;
+        } else if (strcmp(aux->lexeme, ")") == 0) {
+            --countParenteses;
+        }
+        
         aux = aux->next;
     } else {
         printf("Deu ruim no consumeAux, achou: %s, tentou consumir: %s\n", aux->lexeme, token);
@@ -1036,7 +1061,7 @@ void verifyIntSemantic(char *stopCondition) {
             continue;
         }
         
-        printf("\nHouve uma falha na análise semântica - Problema com atribuição de int\n");
+        printf("\nHouve uma falha na análise semântica - Problema com atribuição de int\n\n");
         exit(1);
     }
 }
@@ -1049,7 +1074,29 @@ void verifyStringSemantic(char *stopCondition) {
             continue;
         }
         
-        printf("\nHouve uma falha na análise semântica - Problema com atribuição de String\n");
+        printf("\nHouve uma falha na análise semântica - Problema com atribuição de String\n\n");
+        exit(1);
+    }
+}
+
+void verifyBooleanSemantic(char *stopCondition) {
+    while (peek(stopCondition) == 0) {
+        
+        if (existVariableToSemantic(aux->lexeme, &booleanSizeArray, variablesBooleanToSemantic)) {
+            continue;
+        } else if (consume("true") || consume("false")) {
+            continue;
+        } else if (consume("&&") || consume("==") || consume("!=")) {
+            continue;
+        } else if (existVariableToSemantic(aux->lexeme, &intSizeArray, variablesIntToSemantic) || consume("number")) {
+            if (consume("<") || consume("==") || consume("!=")) {
+                if (existVariableToSemantic(aux->lexeme, &intSizeArray, variablesIntToSemantic) || consume("number")) {
+                    continue;
+                }
+            }
+        }
+        
+        printf("\nHouve uma falha na análise semântica - Problema com atribuição de Boolean\n\n");
         exit(1);
     }
 }
@@ -1065,6 +1112,10 @@ void semantic() {
         } else if (peek("String") == 1) {
             if (peek2("ID") == 1) {
                 checkExistAndAddVariableToSemantic(aux->next->lexeme, &stringSizeArray, variablesStringToSemantic);
+            }
+        } else if (peek("boolean") == 1) {
+            if (peek2("ID") == 1) {
+                checkExistAndAddVariableToSemantic(aux->next->lexeme, &booleanSizeArray, variablesBooleanToSemantic);
             }
         }
         
@@ -1102,6 +1153,10 @@ void semantic() {
         } else if (existVariableToSemantic(aux->lexeme, &stringSizeArray, variablesStringToSemantic)) {
             if (consume("=")) {
                 verifyStringSemantic(";");
+            }
+        } else if (existVariableToSemantic(aux->lexeme, &booleanSizeArray, variablesBooleanToSemantic)) {
+            if (consume("=")) {
+                verifyBooleanSemantic(";");
             }
         }
         
